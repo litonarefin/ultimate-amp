@@ -101,8 +101,15 @@ class Ultimate_AMP{
 		// Default AMP Plugin
 		add_action('plugins_loaded', array( $this, 'uamp_deafult_amp_plugin'), 10);
 
+		// Load AMP Template Files
+		add_filter( 'amp_post_template_file',  array( $this, 'uamp_custom_template'), 10, 2 );
+
     }
 
+
+    public function uamp_custom_template(){
+		TemplateManager::uamp_include_template_file();
+	}
 	/*
 	 * Include Required Files
 	 */

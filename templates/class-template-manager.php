@@ -18,46 +18,78 @@
 		public $ID;
 		public $post;
 
-		public function __construct( $post ) {
-//			$this->template_dir = apply_filters( 'amp_post_template_dir', UAMP_DIR . '/templates/template-one' );
-			add_filter( 'amp_post_template_dir', UAMP_DIR . '/templates/template-one', 100 );
-
-			add_action('pre_amp_render_post', array( $this, 'uamp_template_design'), 12 );
+		// Construct
+		public function __construct() {
+			add_action( 'template_include', array( $this, 'uamp_include_template_file' ), 9999 );
 		}
 
-		public function uamp_template_design(){
-			return "Liton Arefin";
-		}
-
-		/**
-		 * Load and print the template parts for the given post.
-		 */
-		public function load() {
-			global $wp_query;
-			$template = is_page() || $wp_query->is_posts_page ? 'page' : 'single';
-			$this->load_parts( array( $template ) );
-		}
-
-		/**
-		 * Load template parts.
-		 *
-		 * @param string[] $templates Templates.
-		 */
-		public function load_parts( $templates ) {
-			foreach ( $templates as $template ) {
-				$file = $this->get_template_path( $template );
-				$this->verify_and_include( $file, $template );
+		// Ultimate AMP Language Attributes
+		public static function uamp_language_attributes() {
+			$attributes = array();
+			if ( function_exists( 'is_rtl' ) && is_rtl() ) {
+				$attributes[] = 'dir="rtl"';
 			}
+			if ( $lang = get_bloginfo( 'language' ) ) {
+				$attributes[] = "lang=\"$lang\"";
+			}
+			$output = implode( ' ', $attributes );
+			echo $output;
 		}
 
-		/**
-		 * Get template path.
-		 *
-		 * @param string $template Template name.
-		 * @return string Template path.
-		 */
-		private function get_template_path( $template ) {
-			return sprintf( '%s/%s.php', $this->    template_dir, $template );
+		// Include Template Files
+		public static function uamp_include_template_file( ){
+			global $post_id;
+			$uamp = new AMP_Post_Template($post_id);
+
+			// Default Template One Includes
+//			foreach (glob( UAMP_DIR . '/templates/template-one/*.php') as $filename) {
+//				require_once $filename;
+//			}
+
+			require_once UAMP_DIR . '/templates/template-one/functions.php';
+			require_once UAMP_DIR . '/templates/template-one/index.php';
+
+
+
+			// Second Template Files Includes here
 		}
+
+
+		public function template_loader(){
+		 	if ( is_singular() && $template = $this->uamp_single_template() )
+
+		 	return $template;
+		}
+
+		public function uamp_single_template(){
+			return uamp_locate_template( 'singular.php' );
+		}
+
+		/*
+		 * Body Class
+		 */
+		public static function uamp_body_class( $class = '' ) {
+			echo 'class="' . join( ' ', get_body_class( $class ) ) . '"';
+		}
+
+
+//		public function replace_internal_links_with_amp_version( $wp ) {
+//
+//			if ( empty( $wp->query_vars['amp'] ) ) {
+//				return;
+//			}
+//
+//			add_filter( 'nav_menu_link_attributes', array( 'Better_AMP_Content_Sanitizer', 'replace_href_with_amp' ) );
+//			add_filter( 'the_content', array( 'Better_AMP_Content_Sanitizer', 'transform_all_links_to_amp' ) );
+//
+//			add_filter( 'author_link', array( 'Better_AMP_Content_Sanitizer', 'transform_to_amp_url' ) );
+//			add_filter( 'term_link', array( 'Better_AMP_Content_Sanitizer', 'transform_to_amp_url' ) );
+//
+//			add_filter( 'post_link', array( $this, 'transform_post_link_to_amp' ), 20, 2 );
+//			add_filter( 'page_link', array( $this, 'transform_post_link_to_amp' ), 20, 2 );
+//			add_filter( 'attachment_link', array( 'Better_AMP_Content_Sanitizer', 'transform_to_amp_url' ) );
+//			add_filter( 'post_type_link', array( 'Better_AMP_Content_Sanitizer', 'transform_to_amp_url' ) );
+//
+//		}
 
 	}

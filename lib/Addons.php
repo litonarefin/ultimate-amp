@@ -5,7 +5,7 @@
 	 * Date: 6/20/18
 	 */
 
-	namespace Uamp\lib;
+//	namespace Uamp\lib;
 
 
 	class Addons {
