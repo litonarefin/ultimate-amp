@@ -1,41 +1,48 @@
-<amp-sidebar id="header-sidebar" class="ampstart-sidebar px3  " layout="nodisplay">
+<amp-sidebar id="header-sidebar" class="ampstart-sidebar px3" layout="nodisplay">
 	<div class="flex justify-start items-center ampstart-sidebar-header">
 		<div role="button" aria-label="close sidebar" on="tap:header-sidebar.toggle" tabindex="0" class="ampstart-navbar-trigger items-start">✕</div>
 	</div>
-	<nav class="ampstart-sidebar-nav ampstart-nav">
-		<ul class="list-reset m0 p0 ampstart-label">
-			<li class="ampstart-nav-item ampstart-nav-dropdown relative ">
-				<!-- Start Dropdown-inline -->
-				<amp-accordion layout="container" disable-session-states="" class="ampstart-dropdown">
-					<section>
-						<header>Fashion</header>
-						<ul class="ampstart-dropdown-items list-reset m0 p0">
-							<li class="ampstart-dropdown-item"><a href="#" class="text-decoration-none">Styling Tips</a></li>
-							<li class="ampstart-dropdown-item"><a href="#" class="text-decoration-none">Designers</a></li>
-						</ul>
-					</section>
-				</amp-accordion>
-				<!-- End Dropdown-inline -->
-			</li>
-			<li class="ampstart-nav-item "><a class="ampstart-nav-link" href="#">Travel</a></li>
-			<li class="ampstart-nav-item ampstart-nav-dropdown relative ">
-				<!-- Start Dropdown-inline -->
-				<amp-accordion layout="container" disable-session-states="" class="ampstart-dropdown">
-					<section>
-						<header>Food</header>
-						<ul class="ampstart-dropdown-items list-reset m0 p0">
-							<li class="ampstart-dropdown-item"><a href="#" class="text-decoration-none">Recipes</a></li>
-							<li class="ampstart-dropdown-item"><a href="#" class="text-decoration-none">Hosting Tips</a></li>
-						</ul>
-					</section>
-				</amp-accordion>
-				<!-- End Dropdown-inline -->
-			</li>
-			<li class="ampstart-nav-item "><a class="ampstart-nav-link" href="#">Beauty</a></li>
-			<li class="ampstart-nav-item "><a class="ampstart-nav-link" href="#">Shop</a></li>
-		</ul>
-	</nav>
-	<ul class="ampstart-social-follow list-reset flex justify-around items-center flex-wrap m0 mb4">
+
+    <?php
+		if ( has_nav_menu( 'uamp-main-menu' ) ) {
+			wp_nav_menu([
+				'theme_location' => 'uamp-main-menu',
+				'items_wrap'     => '<nav id="%1$s" itemscope itemtype="http://schema.org/SiteNavigationElement" class="ampstart-sidebar-nav ampstart-nav %2$s"><ul class="list-reset m0 p0 ampstart-label">%3$s</ul></nav>',
+				'container'      => 'ul',
+				'menu_id'        => 'menu',
+                'depth'          => 2,
+				'menu_class'     => 'amp-menu',
+			]);
+
+//			wp_nav_menu( array(
+//					'menu'              => 'uamp-main-menu',
+//					'theme_location'    => 'uamp-main-menu',
+//					'depth'             => 5,
+//					'container'         => 'ul',
+//					'container_class'   => 'nav navbar-nav',
+//					'menu_class'        => 'nav navbar-nav',
+//					'container_id'      => 'navs',
+//					'menu_id'           => 'navs',
+////					'fallback_cb'       => 'UAMP_Nav_Menu_Walker::fallback',
+//					'walker'            => new UAMP_Nav_Menu_Walker()
+//				)
+//			);
+
+		} elseif( is_user_logged_in()){
+
+		    $user_can_edit_menu = current_user_can( 'edit_theme_options' );
+
+			if ( $user_can_edit_menu ) {
+				printf( '<a href="%s" class="wrap">', esc_attr( admin_url( '/nav-menus.php?action=locations' ) ) );
+			}
+			esc_html_e( 'Select "AMP Sidebar" Menu', 'uamp' );
+			if ( $user_can_edit_menu ) {
+				echo '</a>';
+			}
+        }
+	?>
+
+    <ul class="ampstart-social-follow list-reset flex justify-around items-center flex-wrap m0 mb4">
 		<li>
 			<a href="#" target="_blank" class="inline-block p1" aria-label="Link to AMP HTML Twitter">
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="22.2" viewbox="0 0 53 49">
@@ -69,8 +76,5 @@
 			</a>
 		</li>
 	</ul>
-	<ul class="ampstart-sidebar-faq list-reset m0">
-		<li class="ampstart-faq-item"><a href="#" class="text-decoration-none">About</a></li>
-		<li class="ampstart-faq-item"><a href="#" class="text-decoration-none">Contact</a></li>
-	</ul>
+
 </amp-sidebar>

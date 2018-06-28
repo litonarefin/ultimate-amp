@@ -10,6 +10,6 @@
             © Your Company, 2016
         </small>
     </footer>
-
+	<?php do_action( 'amp_post_template_footer', $uamp ); ?>
 </body>
 </html>

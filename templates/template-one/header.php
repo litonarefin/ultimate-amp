@@ -13,8 +13,17 @@
 </head>
 <body <?php TemplateManager::uamp_body_class();?>>
 
-    <header class="ampstart-headerbar fixed flex justify-start items-center top-0 left-0 right-0 pl2 pr4 ">
+    <header itemscope itemtype="https://schema.org/WPHeader" class="ampstart-headerbar fixed flex justify-start items-center top-0 left-0 right-0 pl2 pr4">
         <div role="button" aria-label="open sidebar" on="tap:header-sidebar.toggle" tabindex="0" class="ampstart-navbar-trigger  pr2  ">☰
         </div>
-        <amp-img src="../img/blog/logo.png" width="100" height="61.3" layout="fixed" class="my0 mx-auto " alt="The Blog"></amp-img>
+
+        <a href="<?php echo esc_url( $uamp->get( 'home_url' ) ); ?>">
+            <?php $site_icon_url = $uamp->get( 'site_icon_url' ); ?>
+            <?php if ( $site_icon_url ) : ?>
+                <amp-img src="<?php echo esc_url( $site_icon_url ); ?>" width="100" height="61.3" layout="fixed" class="my0 mx-auto"></amp-img>
+            <?php endif; ?>
+            <span class="amp-site-title">
+				<?php echo esc_html( wptexturize( $uamp->get( 'blog_name' ) ) ); ?>
+			</span>
+        </a>
     </header>
