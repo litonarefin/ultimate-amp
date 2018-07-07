@@ -124,10 +124,10 @@
 				elseif( $args->has_children && $depth === 0 )
 					$item_output .= '';
 				elseif( $depth === 1 )
-					$item_output .= '<a class="text-decoration-none">';
+					$item_output .= '<a class="text-decoration-none"'. $attributes .'>';
 
 				else
-					$item_output .= '<a class="ampstart-nav-link">';
+					$item_output .= '<a class="ampstart-nav-link"'. $attributes .'>';
 
 				if( !$args->has_children){
 					$item_output .= $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after;

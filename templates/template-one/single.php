@@ -32,23 +32,33 @@
 		</header>
 
 		<div class="mb4 px3">
-			<?php echo $uamp->get( 'post_amp_content' ); // amphtml content; no kses ?>
+			<?php echo $uamp->get( 'post_amp_content' ); // amphtml content; no kses
+				wp_link_pages( array(
+					'before'      => '<div class="page-links"><span class="page-links-title">' . __( 'Pages:', 'uamp' ) . '</span>',
+					'after'       => '</div>',
+					'link_before' => '<span>',
+					'link_after'  => '</span>',
+					'pagelink'    => '<span class="screen-reader-text">' . __( 'Page', 'uamp' ) . ' </span>%',
+					'separator'   => '<span class="screen-reader-text">, </span>',
+				) );
+            ?>
+
         </div>
 
         <section class="recipe-comments">
-            <h2 class="mb3">4 Responses</h2>
+            <h2 class="mb3"><?php comments_number( esc_html('0 Comment' ,'uamp') , esc_html('1 Comment' ,'uamp'), esc_html('% Comments' ,'uamp') );?></h2>
+
             <ul class="list-reset">
-                <li class="mb4">
-                    <h3 class="ampstart-subtitle">Sriram</h3>
-                    <span class="h5 block mb3">02.24.17 at 6:01 pm</span>
-                    <p>This is perfect for a summer patio party. Thanks for another great one!</p>
-                </li>
-                <li class="mb4">
-                    <h3 class="ampstart-subtitle">Eric</h3>
-                    <span class="h5 block mb3">02.24.17 at 5:14 am</span>
-                    <p>These were so good I woke up dreaming about them. Regards, Eric.</p>
-                </li>
+                <?php TemplateManager::uamp_comments_list();?>
             </ul>
+
+            <a href="<?php TemplateManager::uamp_comment_link();?>" class="button add-comment text-center mt3">
+				<?php echo _e('Add Comment', 'uamp'); ?>
+            </a>
+
         </section>
+
+
+
 	</article>
 </main>

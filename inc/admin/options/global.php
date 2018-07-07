@@ -1,6 +1,6 @@
 <?php
 
-namespace Uamp\inc\admin\options;
+//namespace Uamp\inc\admin\options;
 
 $sections[] = array(
     'title'      => esc_html__('General Settings', 'uamp'),

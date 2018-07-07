@@ -8,6 +8,7 @@
 	add_action('uamp/template/post/meta', 'uamp_template_post_meta');
 	add_action('uamp/template/post/meta/author', 'uamp_template_post_author_meta');
 	add_action('uamp/template/post', 'uamp_template_post');
+//	add_action('uamp/template/post', 'uamp_template_home_loop');
 	add_action('uamp/template/footer', 'uamp_template_footer');
 
 
@@ -18,8 +19,11 @@
 	add_action('uamp/template/head', 'uamp_custom_normalize_css',10,2);
 	add_filter( 'wp_nav_menu_args', 'uamp_set_menu_walker', 9999 );
 
+	// Add Action/Filters
+
 	// Remove Action/Filters
 	remove_action( 'amp_post_template_head', 'amp_add_generator_metadata' );
+
 
 
 
@@ -46,15 +50,20 @@
 		require_once UAMP_DIR . '/templates/template-one/sidebar.php';
     }
 
-	function uamp_head_scripts(){?>
+	function uamp_head_scripts() { ?>
 
-        <script custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js" async=""></script>
-        <script custom-element="amp-sidebar" src="https://cdn.ampproject.org/v0/amp-sidebar-0.1.js" async=""></script>
-        <script custom-element="amp-accordion" src="https://cdn.ampproject.org/v0/amp-accordion-0.1.js" async=""></script>
-        <script custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js" async=""></script>
-        <script custom-element="amp-instagram" src="https://cdn.ampproject.org/v0/amp-instagram-0.1.js" async=""></script>
+            <script custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"
+                    async=""></script>
+            <script custom-element="amp-sidebar" src="https://cdn.ampproject.org/v0/amp-sidebar-0.1.js"
+                    async=""></script>
+            <script custom-element="amp-accordion" src="https://cdn.ampproject.org/v0/amp-accordion-0.1.js"
+                    async=""></script>
+            <script custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js" async=""></script>
+            <script custom-element="amp-instagram" src="https://cdn.ampproject.org/v0/amp-instagram-0.1.js"
+                    async=""></script>
 
-	<?php }
+		<?php
+	}
 
 
 	function uamp_custom_css(){
@@ -78,6 +87,7 @@
 			require_once UAMP_DIR . '/templates/template-one/header.php';
     }
 
+
 	function uamp_template_post(){
 		if ( is_singular() ) {
 			$uamp = new AMP_Post_Template($post_id);
@@ -85,6 +95,13 @@
 		}
 	}
 
+	function uamp_template_home_loop(){
+		if(is_front_page() || is_home() ){
+			$uamp = new AMP_Post_Template($post_id);
+			require_once UAMP_DIR . '/templates/template-one/home.php';
+		}
+
+    }
 
 	function uamp_template_post_meta(){
 			$uamp = new AMP_Post_Template($post_id);

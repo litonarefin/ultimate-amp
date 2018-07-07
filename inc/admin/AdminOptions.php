@@ -9,9 +9,14 @@
 
 //	use Uamp\inc\admin\options\Header;
 
-	if ( ! is_admin() ) {
-		return;
-	}
+//	if ( ! is_admin() ) {
+//		return;
+//	}
+
+if ( ! class_exists( 'Redux' ) ) {
+	return;
+}
+
 
 if ( ! class_exists( 'UampAdminOptions' ) ) {
 
@@ -19,14 +24,26 @@ if ( ! class_exists( 'UampAdminOptions' ) ) {
 
 		public $args = [];
 		public $sections = [];
-		public $plugin;
+		public $opt_name = 'uamp_options';
 		public $ReduxFramework;
 
 		public function __construct() {
-			add_action('plugins_loaded', [$this, 'initSettings'], 10);
+			add_action( 'plugins_loaded', [$this, 'initSettings'], 10);
+			add_action( 'redux/loaded', [$this, 'remove_demo'] );
 
 		}
 
+		function remove_demo() {
+			// Used to hide the demo mode link from the plugin page. Only used when Redux is a plugin.
+			if ( class_exists( 'ReduxFrameworkPlugin' ) ) {
+				remove_filter( 'plugin_row_meta', array(
+					ReduxFrameworkPlugin::instance(),
+					'plugin_metalinks'
+				), null, 2 );
+				// Used to hide the activation notice informing users of the demo panel. Only used when Redux is a plugin.
+				remove_action( 'admin_notices', array( ReduxFrameworkPlugin::instance(), 'admin_notices' ) );
+			}
+		}
 
 		/*
 		 * Initialize Settings
@@ -56,6 +73,7 @@ if ( ! class_exists( 'UampAdminOptions' ) ) {
 
 			require dirname(__FILE__) . '/options/global.php';
 			require dirname(__FILE__) . '/options/Header.php';
+			require dirname(__FILE__) . '/options/Socials.php';
 
 //			new Uamp_Header();
 
@@ -66,7 +84,7 @@ if ( ! class_exists( 'UampAdminOptions' ) ) {
 		public function setArguments() {
 			$this->args = [
 				// TYPICAL -> Change these values as you need/desire
-				'opt_name' => 'uamp_options',
+				'opt_name' => $this->opt_name,
 				// This is where your data is stored in the database and also becomes your global variable name.
 				'display_name' => 'Ultimate AMP',
 				// Name that appears at the top of your panel
@@ -80,7 +98,6 @@ if ( ! class_exists( 'UampAdminOptions' ) ) {
 				'page_title' => esc_html__('Ultimate AMP', 'uamp'),
 				// You will need to generate a Google API key to use this feature.
 				// Please visit: https://developers.google.com/fonts/docs/developer_api#Auth
-				'google_api_key' => 'AIzaSyASx0fO5qLJxb3BXlZbec1CVVZomgPQ37s',
 				// Must be defined to add google fonts to the typography module
 				'update_notice'         => false,
 				'intro_text'            => $uamp_pro,

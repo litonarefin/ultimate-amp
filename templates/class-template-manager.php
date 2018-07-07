@@ -7,7 +7,6 @@
 
 //	namespace Uamp\templates;
 
-
 	class TemplateManager{
 		const SITE_ICON_SIZE = 32;
 		const CONTENT_MAX_WIDTH = 600;
@@ -39,6 +38,7 @@
 		// Include Template Files
 		public static function uamp_include_template_file( ){
 			global $post_id;
+
 			$uamp = new AMP_Post_Template($post_id);
 
 			// Default Template One Includes
@@ -48,7 +48,12 @@
 
 			require_once UAMP_DIR . '/templates/template-one/functions.php';
 			require_once UAMP_DIR . '/templates/template-one/index.php';
+			require_once UAMP_DIR . '/templates/template-one/home.php';
 
+			if( is_home() || is_front_page()){
+//				require_once UAMP_DIR . '/templates/template-one/functions.php';
+				require_once UAMP_DIR . '/templates/template-one/home.php';
+			}
 
 
 			// Second Template Files Includes here
@@ -91,5 +96,35 @@
 //			add_filter( 'post_type_link', array( 'Better_AMP_Content_Sanitizer', 'transform_to_amp_url' ) );
 //
 //		}
+
+		public static function uamp_comment_link(){
+			$comments_url = get_permalink() . '#respond';
+			echo esc_url( $comments_url );
+		}
+
+		public static function uamp_comments_list( $args = array(), $comment_query_args = array() ) {
+
+			global $wp_query;
+
+			$post_id = get_the_ID();
+
+			$comment_args = array(
+				'orderby'       => 'comment_date_gmt',
+				'order'         => 'ASC',
+				'status'        => 'approve',
+				'post_id'       => $post_id,
+				'no_found_rows' => FALSE,
+			);
+
+			$comments = new WP_Comment_Query( array_merge( $comment_args, $comment_query_args ) );
+
+			$comments_list = apply_filters( 'comments_array', $comments->comments, $post_id );
+
+			$wp_query->comments = $comments_list;
+
+			return wp_list_comments( $args );
+		}
+
+
 
 	}
