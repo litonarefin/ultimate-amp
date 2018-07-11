@@ -13,5 +13,3 @@
 <?php do_action('uamp/template/footer'); ?>
 
 <?php do_action('uamp/template/end'); ?>
-
-

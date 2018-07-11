@@ -6,6 +6,8 @@
 
 <?php do_action('uamp_post_before_loop'); ?>
 
+<?php do_action('uamp/template/home/loop'); ?>
+
 <?php do_action('uamp_post_after_loop'); ?>
 
 <?php do_action('uamp/template/footer'); ?>

@@ -1,4 +1,6 @@
-<?php $post_author = $uamp->get( 'post_author' ); ?>
+<?php
+	$uamp = new AMP_Post_Template($post_id);
+    $post_author = $uamp->get( 'post_author' ); ?>
 <?php if ( $post_author ) : ?>
 	<div class="amp-wp-meta amp-wp-byline">
 		<?php if ( function_exists( 'get_avatar_url' ) ) : ?>

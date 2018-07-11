@@ -24,10 +24,13 @@ define( 'UAMP_PLUGIN_URL', $uamp->plugin_url());
 define( 'UAMP_PLUGIN_DIR', $uamp->plugin_path() );
 define( 'UAMP_PLUGIN_DIR_URL', $uamp->plugin_dir_url());
 define( 'UAMP_IMAGE_DIR', $uamp->plugin_dir_url().'/images');
+define( 'UAMP_TMP_DIR', $uamp->plugin_dir_url().'/templates/');
 define( 'UAMP_TD', $uamp->localization_init());  // Ultimate AMP Text Domain
 define( 'UAMP_FILE', __FILE__ );
 define( 'UAMP_DIR', dirname( __FILE__ ) );
 define( 'STARTPOINT', 'amp');
+
+define( 'UAMP_TMP_DIR', apply_filters( 'ultimate-amp/template/dir-name', 'uamp' ) );
 
 
 class Ultimate_AMP{
@@ -110,10 +113,12 @@ class Ultimate_AMP{
     public function uamp_custom_template(){
 		TemplateManager::uamp_include_template_file();
 	}
+
 	/*
 	 * Include Required Files
 	 */
 	public function include_files(){
+
 		require_once UAMP_DIR . '/inc/ultimate-amp-autoload.php';
 		UltimateAmpAutoload::register();
 
@@ -121,11 +126,12 @@ class Ultimate_AMP{
 			require_once dirname( __FILE__ ) . '/inc/admin/redux-core/framework.php';
 		}
 
-
 		if ( is_admin() ) {
 			// Register all the main options
 			require_once dirname( __FILE__ ).'/inc/admin/AdminOptions.php';
 		}
+
+		require_once UAMP_DIR . '/templates/template-one/functions.php';
 
 	}
 
@@ -227,7 +233,6 @@ class Ultimate_AMP{
 			return;
 		}
 
-
 		add_action( 'init', array( $this, 'uamp_init' ), 0 ); // Must be 0 because widgets_init happens at init priority 1.
 	}
 
@@ -236,25 +241,42 @@ class Ultimate_AMP{
 	 */
 
 	public function uamp_init(){
+
+	    //Automatic AMP Actions/Hooks
+		do_action('amp_init');
+		add_post_type_support( 'post', AMP_QUERY_VAR );
+		add_filter( 'request', 'amp_force_query_var_value' );
+		add_action( 'wp', 'amp_maybe_add_actions', 100 );
+
 		/**
 		 * Triggers while Ultimate AMP Plugin is Active
 		 */
-		do_action('amp_init');
 
+		// Rewrite rules for Ultimate AMP
 		add_rewrite_endpoint( Ultimate_AMP_Helper:: amp_get_slug(), EP_PERMALINK );
+		add_filter('init',[$this, 'uamp_add_rewrite']);
+		add_filter('init',[$this, 'append_index_rewrite_rule']);
 
-		add_post_type_support( 'post', AMP_QUERY_VAR );
+		add_action( 'pre_get_posts', [$this, 'isolate_pre_get_posts_start'], 1 );
+		add_action( 'pre_get_posts', [$this, 'isolate_pre_get_posts_end'], 100 );
 
-		add_filter( 'request', 'amp_force_query_var_value' );
-
-		add_filter( 'request', 'amp_force_query_var_value' );
-		add_action( 'wp', 'amp_maybe_add_actions' );
-
-		// Automatic Redirect Mobile Users
-		add_action( 'template_redirect', array( $this, 'uamp_auto_redirect_to_amp' ), 100 );
 
 		// Redirect the old url of amp page to the updated url.
 		add_filter( 'old_slug_redirect_url', 'uamp_old_slug_to_new_slug' );
+
+
+
+		// Automatic Redirect Mobile Users
+		add_action( 'template_include',  [$this, 'uamp_include_template_files'], 9999 );
+		add_action( 'template_redirect', [$this, 'uamp_auto_redirect_to_amp' ], 100 );
+		add_action( 'template_redirect', [$this, 'uamp_page_status_check'], 100 );
+
+
+        // Ultimate AMP Scripts/Styles
+		add_action( 'ultimate-amp/template/enqueue-scripts', array( $this, 'enqueue_components_scripts' ) );
+
+
+
 
 
 //		add_rewrite_endpoint( amp_get_slug(), EP_PERMALINK );
@@ -272,8 +294,189 @@ class Ultimate_AMP{
 
 		define('UAMP_QUERY_VAR', apply_filters( 'amp_query_var', $this->uamp_generate_endpoint() ) );
 
-//		add_action( 'template_redirect', [$this, 'uamp_page_status_check'], 10 );
 
+	}
+
+
+	public function isolate_pre_get_posts_end( &$wp_query ) {
+
+		global $better_amp_isolate_pre_get_posts;
+
+		if ( !is_admin() && $wp_query->is_main_query()) {
+			if ($better_amp_isolate_pre_get_posts) {
+				$wp_query->query_vars = $better_amp_isolate_pre_get_posts;
+				unset($better_amp_isolate_pre_get_posts);
+			}
+		}
+	}
+
+
+	public function isolate_pre_get_posts_start( $wp_query ) {
+
+		global $better_amp_isolate_pre_get_posts;
+
+
+		if ( ! is_admin() && $wp_query->is_main_query() ) {
+			$better_amp_isolate_pre_get_posts = $wp_query->query_vars;
+		}
+
+	}
+
+
+
+	public function uamp_include_template_files() {
+
+		$include = $this->template_loader();
+
+		if ( $include = apply_filters( 'ultimate-amp/template/include', $include ) ) {
+//			return $include;
+		} elseif ( current_user_can( 'switch_themes' ) ) {
+			wp_die( __( 'Ultimate AMP Theme Was Not Found!', 'uamp' ) );
+		} else {
+			return UAMP_DIR . '/no-template.php';
+		}
+
+
+	}
+
+
+	public function enqueue_components_scripts() { ?>
+        <script custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"
+                async=""></script>
+        <script custom-element="amp-sidebar" src="https://cdn.ampproject.org/v0/amp-sidebar-0.1.js"
+                async=""></script>
+        <script custom-element="amp-accordion" src="https://cdn.ampproject.org/v0/amp-accordion-0.1.js"
+                async=""></script>
+        <script custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js" async=""></script>
+        <script custom-element="amp-instagram" src="https://cdn.ampproject.org/v0/amp-instagram-0.1.js"
+                async=""></script>
+
+    <?php }
+
+
+
+
+	public function better_amp_get_template_directory() {
+
+		if ( $theme_info = $this->better_amp_get_template_info() ) {
+			return $theme_info['TemplateRoot'];
+		}
+
+		return '';
+	}
+
+
+	function better_amp_get_template_info() {
+
+		return wp_parse_args(
+			apply_filters( 'ultimate-amp/template/template-one/active-template', array() ),
+			array(
+				'ScreenShot' => 'screenshot.png',
+				'MaxWidth'   => 780,
+				'view'       => 'general'
+			)
+		);
+	}
+
+
+	public function uamp_single_template() {
+		$template = new Ultimate_Template_Loader();
+		return $template->get_template_part( 'single' );
+	}
+
+	public function uamp_page_template() {
+		$template = new Ultimate_Template_Loader();
+		return $template->get_template_part( 'page' );
+	}
+
+	public function uamp_home_template() {
+		$template = new Ultimate_Template_Loader();
+		return $template->get_template_part( 'home' );
+	}
+
+	public function better_amp_index_template() {
+		$template = new Ultimate_Template_Loader();
+		return $template->get_template_part( 'index' );
+	}
+
+	public function uamp_404_template() {
+		$template = new Ultimate_Template_Loader();
+		return $template->get_template_part( '404' );
+	}
+
+	public function uamp_woocommerce_template() {
+		$template = new Ultimate_Template_Loader();
+		return $template->get_template_part( 'woocommerce.php' );
+	}
+
+	function template_loader() {
+		$templates = new Ultimate_Template_Loader();
+
+		if ( function_exists( 'is_embed' ) && is_embed() && $template = better_amp_embed_template() ) :
+        elseif ( function_exists( 'is_woocommerce' ) && is_woocommerce() && is_page( wc_get_page_id( 'shop' ) ) && $template = $this->uamp_woocommerce_template() ) :
+        elseif ( is_404() && $template = $this->uamp_404_template() ) :
+//        elseif ( is_search() && $template = better_amp_search_template() ) :
+        elseif ( is_home() && $template = $this->uamp_home_template() ) :
+//        elseif ( is_post_type_archink rel="canonical" href=ve() && $template = better_amp_post_type_archive_template() ) :
+//        elseif ( is_tax() && $template = better_amp_taxonomy_template() ) :
+//        elseif ( is_attachment() && $template = better_amp_attachment_template() ) :
+//			remove_filter( 'the_content', 'prepend_attachment' );
+        elseif ( is_single() && $template = $this->uamp_single_template() ) :
+        elseif ( is_page() && $template = $this->uamp_page_template() ) :
+//        elseif ( is_singular() && $template = $this->uamp_single_template() ) :
+//        elseif ( is_category() && $template = better_amp_category_template() ) :
+//        elseif ( is_tag() && $template = better_amp_tag_template() ) :
+//        elseif ( is_author() && $template = better_amp_author_template() ) :
+//        elseif ( is_date() && $template = better_amp_date_template() ) :
+//        elseif ( is_archive() && $template = better_amp_archive_template() ) :
+//        elseif ( is_paged() && $template = better_amp_paged_template() ) :
+		else :
+			$template = $this->better_amp_index_template();
+		endif;
+
+		return $template;
+
+	}
+
+
+	public function append_index_rewrite_rule() {
+		add_rewrite_rule( self::STARTPOINT . '/?$', "index.php?amp=index", 'top' );
+	}
+
+
+
+	public function uamp_add_rewrite(){
+		$this->uamp_add_rewrite_startpoint( 'amp', EP_ALL );
+
+		/**
+		 * automattic amp compatibility
+		 */
+		$amp_qv = defined( 'AMP_QUERY_VAR' ) ? AMP_QUERY_VAR : 'amp';
+		add_rewrite_endpoint( $amp_qv, EP_PERMALINK );
+    }
+
+
+	public function add_startpint( $name, $places, $query_var = TRUE, $single_match = TRUE ) {
+
+		global $wp;
+
+		// For backward compatibility, if null has explicitly been passed as `$query_var`, assume `true`.
+		if ( TRUE === $query_var || NULL === func_get_arg( 2 ) ) {
+			$query_var = $name;
+		}
+
+		$this->startpints[] = array( $places, $name, $query_var, $single_match );
+
+		if ( $query_var ) {
+			$wp->add_query_var( $query_var );
+		}
+
+	}
+
+
+
+	function uamp_add_rewrite_startpoint( $name, $places, $query_var = TRUE, $single_match = TRUE ) {
+		$this->add_startpint( $name, $places, $query_var, $single_match );
 	}
 
 
@@ -376,26 +579,25 @@ class Ultimate_AMP{
 
 
 
-
 //			$query_arg_array = $wp->query_vars;
 
 //			if ((is_home() || is_archive()) && $wp->query_vars['paged'] >= '2') {
 
 			if (is_home() || is_front_page() || is_archive()) {
+				global $wp;
 				$new_url = home_url( $wp->request );
-
-//				if (null != $new_url && true != $endpoint_check) {
-
 				$explode_path = explode("/", $new_url);
 				$inserted = [AMP_QUERY_VAR];
 				array_splice($explode_path, 3, 0, $inserted);
 				$impode_url = implode('/', $explode_path);
 				$amp_url = untrailingslashit( $impode_url );
 
-				print_r($amp_url);
+//				print_r($amp_url);
+				
 
+//				return $this->uamp_home_template();
 
-				$query_arg_array = $wp->query_vars;
+//				$query_arg_array = $wp->query_vars;
 //				print_r($query_arg_array);
 
 //				if( array_key_exists( "page" , $query_arg_array  ) ) {
@@ -461,9 +663,25 @@ class Ultimate_AMP{
 	 * Automatic Redirect to AMP version of Mobile Users
 	 */
 	public function uamp_auto_redirect_to_amp(){
-		$redirect_url = '';
+//		if ( ! is_amp_endpoint() ) {
+//			return;
+//		}
+
+
+//		$redirect_url = '';
 		$redirect_url = $this->uamp_generate_amphtml();
 		$request_url = $this->get_requested_url();
+
+
+		print_r($redirect_url);
+		print_r($request_url);
+
+//		$is_amp_endpoint = $this->uamp_is_amp_endpoint();
+
+//        print_r($this->uamp_generate_endpoint());
+//		print_r( $this->uamp_home_template());
+//		print_r( $this->uamp_is_amp_endpoint() );
+
 
 //		if($this->uamp_is_amp_endpoint()){
 //			return;
@@ -533,57 +751,3 @@ function ultimate_amp(){
 
 // Let's kick it
 ultimate_amp();
-
-
-add_action( 'pre_get_posts', 'isolate_pre_get_posts_start', 1 );
-add_action( 'pre_get_posts', 'isolate_pre_get_posts_end', 100 );
-
-
-	function isolate_pre_get_posts_end( &$wp_query ) {
-
-		global $better_amp_isolate_pre_get_posts;
-
-		if (is_better_amp($wp_query) && !is_admin() && $wp_query->is_main_query()) {
-			if ($better_amp_isolate_pre_get_posts) {
-				$wp_query->query_vars = $better_amp_isolate_pre_get_posts;
-				unset($better_amp_isolate_pre_get_posts);
-			}
-		}
-	}
-
-
-    function isolate_pre_get_posts_start( $wp_query ) {
-
-        global $better_amp_isolate_pre_get_posts;
-
-
-        if ( is_better_amp( $wp_query ) && ! is_admin() && $wp_query->is_main_query() ) {
-            $better_amp_isolate_pre_get_posts = $wp_query->query_vars;
-        }
-
-    }
-
-	function is_better_amp( $wp_query = NULL, $default = FALSE ) {
-		if ( $wp_query instanceof WP_Query ) {
-			return (bool) $wp_query->get( 'amp', $default );
-		}
-
-		if ( did_action( 'template_redirect' ) && ! is_404() ) {
-
-			global $wp_query;
-
-			// check the $wp_query
-			if ( is_null( $wp_query ) ) {
-				return FALSE;
-			} else {
-				return (bool) $wp_query->get( 'amp', $default );
-			}
-
-		} else {
-
-			$path   = $path = $_SERVER['REQUEST_URI'];;
-			$amp_qv = defined( 'AMP_QUERY_VAR' ) ? AMP_QUERY_VAR : 'amp';
-
-			return (bool) preg_match( "#^$path/*(.*?)/$amp_qv/*#", $_SERVER['REQUEST_URI'] );
-		}
-    }

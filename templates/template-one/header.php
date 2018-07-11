@@ -1,4 +1,3 @@
-<?php global $uamp_options;?>
 <!doctype html>
 <html <?php TemplateManager::uamp_language_attributes(); ?> amp>
 <head>

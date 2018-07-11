@@ -2,13 +2,14 @@
 
     //Add Actions and Filters
 //	add_action('uamp/template/start', 'uamp_template_start', 10);
+	add_action('uamp/template/head', 'uamp_template_enqueue_scripts');
 	add_action('uamp/template/header', 'uamp_template_header');
 	add_action('uamp/template/sidebar', 'uamp_template_sidebar');
 	add_action('uamp/template/featured-image', 'uamp_template_post_featured_image');
 	add_action('uamp/template/post/meta', 'uamp_template_post_meta');
 	add_action('uamp/template/post/meta/author', 'uamp_template_post_author_meta');
 	add_action('uamp/template/post', 'uamp_template_post');
-//	add_action('uamp/template/post', 'uamp_template_home_loop');
+	add_action('uamp/template/home/loop', 'uamp_template_home_loop');
 	add_action('uamp/template/footer', 'uamp_template_footer');
 
 
@@ -26,6 +27,9 @@
 
 
 
+    function uamp_template_enqueue_scripts(){
+        do_action('uamp/template/enqueue-scripts');
+    }
 
 	function uamp_set_menu_walker( $args ) {
 
@@ -76,11 +80,16 @@
 	<?php }
 
 	function uamp_template_post_featured_image(){
-        $uamp = new AMP_Post_Template($post_id);
-		$uamp->load_parts(array('featured-image'));
-        require_once UAMP_DIR . '/templates/template-one/featured-image.php';
-    }
+		$uamp = new AMP_Post_Template($post_id);
+        if(is_single()){
+			$uamp->load_parts(array('featured-image'));
+			require_once UAMP_DIR . '/templates/template-one/featured-image.php';
+        } elseif( is_home() || is_front_page()){
+			require_once UAMP_DIR . '/templates/template-one/featured-image.php';
+			echo $amp_html;
+		}
 
+    }
 
 	function uamp_template_header(){
             $uamp = new AMP_Post_Template($post_id);
@@ -89,33 +98,33 @@
 
 
 	function uamp_template_post(){
-		if ( is_singular() ) {
-			$uamp = new AMP_Post_Template($post_id);
-			require_once UAMP_DIR . '/templates/template-one/single.php';
-		}
+        if( is_single() ){
+			$template = new Ultimate_Template_Loader();
+			return $template->get_template_part( 'single-post' );
+        }
 	}
 
 	function uamp_template_home_loop(){
 		if(is_front_page() || is_home() ){
-			$uamp = new AMP_Post_Template($post_id);
-			require_once UAMP_DIR . '/templates/template-one/home.php';
+            $template = new Ultimate_Template_Loader();
+            return $template->get_template_part( 'inc/loop' );
 		}
 
     }
 
 	function uamp_template_post_meta(){
-			$uamp = new AMP_Post_Template($post_id);
-			require_once UAMP_DIR . '/templates/template-one/meta-taxonomy.php';
+		$template = new Ultimate_Template_Loader();
+		return $template->get_template_part( 'meta-taxonomy' );
 	}
 
 	function uamp_template_post_author_meta(){
-			$uamp = new AMP_Post_Template($post_id);
-			require_once UAMP_DIR . '/templates/template-one/meta-author.php';
+		$template = new Ultimate_Template_Loader();
+		return $template->get_template_part( 'meta-author' );
 	}
 
 	function uamp_template_footer(){
-            $uamp = new AMP_Post_Template($post_id);
-			require_once UAMP_DIR . '/templates/template-one/footer.php';
+		$template = new Ultimate_Template_Loader();
+		return $template->get_template_part( 'footer' );
     }
 
 
@@ -136,3 +145,23 @@
 		echo "Arefin";
 	}
 
+
+
+
+
+
+	add_filter( 'ultimate-amp/template/template-one/active-template', 'uamp_get_default_template_info', 1 );
+
+	function uamp_get_default_template_info() {
+		return apply_filters( 'ultimate-amp/template/default-template', array(
+			'Name'         => __( 'Template One', 'uamp' ),
+			'ThemeURI'     => 'https://jeweltheme.com',
+			'Description'  => 'Ultimate AMP Template',
+			'Author'       => 'Jewel Theme',
+			'AuthorURI'    => 'https://jeweltheme.com',
+			'Version'      => '1.0.0',
+			'ScreenShot'   => 'screenshot.png',
+			'TemplateRoot' => dirname( __FILE__ ),
+			'MaxWidth'     => 780
+		) );
+	}

@@ -19,7 +19,7 @@
 
 		// Construct
 		public function __construct() {
-			add_action( 'template_include', array( $this, 'uamp_include_template_file' ), 9999 );
+			add_action( 'template_include', array( $this, 'uamp_include_template_file' ), 99999 );
 		}
 
 		// Ultimate AMP Language Attributes
@@ -47,23 +47,21 @@
 //			}
 
 			require_once UAMP_DIR . '/templates/template-one/functions.php';
-			require_once UAMP_DIR . '/templates/template-one/index.php';
-			require_once UAMP_DIR . '/templates/template-one/home.php';
+//			require_once UAMP_DIR . '/templates/template-one/index.php';
+//			require_once UAMP_DIR . '/templates/template-one/home.php';
 
-			if( is_home() || is_front_page()){
-//				require_once UAMP_DIR . '/templates/template-one/functions.php';
-				require_once UAMP_DIR . '/templates/template-one/home.php';
-			}
+//			if( is_home() || is_front_page()){
+//				require_once UAMP_DIR . '/templates/template-one/home.php';
+//				require_once UAMP_DIR . '/templates/template-one/index.php';
+//			}
+
 
 
 			// Second Template Files Includes here
 		}
 
-
-		public function template_loader(){
-		 	if ( is_singular() && $template = $this->uamp_single_template() )
-
-		 	return $template;
+		public function uamp_home_template(){
+			return uamp_locate_template( 'index.php' );
 		}
 
 		public function uamp_single_template(){
