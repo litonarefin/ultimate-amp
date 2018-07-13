@@ -6,6 +6,7 @@
 	 */
 	$uamp = new AMP_Post_Template($post_id);
 	?>
+
 <main id="content" role="main" class="<?php post_class();?>">
 	<article class="recipe-article">
 		<header>

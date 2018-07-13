@@ -120,16 +120,16 @@ class Ultimate_AMP{
 	public function include_files(){
 
 		require_once UAMP_DIR . '/inc/ultimate-amp-autoload.php';
+
 		UltimateAmpAutoload::register();
 
-		if ( ! class_exists( 'ReduxFramework' ) ) {
-			require_once dirname( __FILE__ ) . '/inc/admin/redux-core/framework.php';
+//		if ( ! class_exists( 'ReduxFramework' ) && is_admin() ) {
+		if ( ! class_exists( 'ReduxFramework' )) {
+			require_once UAMP_DIR . '/inc/admin/redux-core/framework.php';
 		}
 
-		if ( is_admin() ) {
-			// Register all the main options
-			require_once dirname( __FILE__ ).'/inc/admin/AdminOptions.php';
-		}
+        // Register all the Main Options
+        require_once UAMP_DIR.'/inc/admin/admin-options.php';
 
 		require_once UAMP_DIR . '/templates/template-one/functions.php';
 
@@ -262,12 +262,12 @@ class Ultimate_AMP{
 
 
 		// Redirect the old url of amp page to the updated url.
-		add_filter( 'old_slug_redirect_url', 'uamp_old_slug_to_new_slug' );
+		add_filter( 'old_slug_redirect_url', [$this, 'amp_redirect_old_slug_to_new_url' ]);
 
 
 
 		// Automatic Redirect Mobile Users
-		add_action( 'template_include',  [$this, 'uamp_include_template_files'], 9999 );
+//		add_action( 'template_include',  [$this, 'uamp_include_template_files'], 9999 );
 		add_action( 'template_redirect', [$this, 'uamp_auto_redirect_to_amp' ], 100 );
 		add_action( 'template_redirect', [$this, 'uamp_page_status_check'], 100 );
 
@@ -295,6 +295,15 @@ class Ultimate_AMP{
 		define('UAMP_QUERY_VAR', apply_filters( 'amp_query_var', $this->uamp_generate_endpoint() ) );
 
 
+	}
+
+	function amp_redirect_old_slug_to_new_url( $link ) {
+
+		if ( is_amp_endpoint() ) {
+			$link = trailingslashit( trailingslashit( $link ) . amp_get_slug() );
+		}
+
+		return $link;
 	}
 
 
@@ -410,6 +419,12 @@ class Ultimate_AMP{
 	}
 
 	function template_loader() {
+
+		if ( ! $this->uamp_is_amp_endpoint() ) {
+			return;
+		}
+
+
 		$templates = new Ultimate_Template_Loader();
 
 		if ( function_exists( 'is_embed' ) && is_embed() && $template = better_amp_embed_template() ) :
@@ -423,7 +438,7 @@ class Ultimate_AMP{
 //			remove_filter( 'the_content', 'prepend_attachment' );
         elseif ( is_single() && $template = $this->uamp_single_template() ) :
         elseif ( is_page() && $template = $this->uamp_page_template() ) :
-//        elseif ( is_singular() && $template = $this->uamp_single_template() ) :
+        elseif ( is_singular() && $template = $this->uamp_single_template() ) :
 //        elseif ( is_category() && $template = better_amp_category_template() ) :
 //        elseif ( is_tag() && $template = better_amp_tag_template() ) :
 //        elseif ( is_author() && $template = better_amp_author_template() ) :
@@ -593,7 +608,7 @@ class Ultimate_AMP{
 				$amp_url = untrailingslashit( $impode_url );
 
 //				print_r($amp_url);
-				
+
 
 //				return $this->uamp_home_template();
 
@@ -613,6 +628,7 @@ class Ultimate_AMP{
 				<link rel="canonical" href="<?php echo user_trailingslashit( esc_url( apply_filters('uamp_modify_rel_url', $amp_url ) ) ) ?>">
                 <link rel="amphtml" href="<?php echo user_trailingslashit( esc_url( apply_filters('uamp_modify_rel_url', $amp_url ) ) ) ?>" />
 <?php
+
 //				wp_redirect( esc_url( $amp_url )  , 301 );
 //				exit();
 
@@ -621,38 +637,9 @@ class Ultimate_AMP{
 			}
 
             if(is_404()){
-//				$amp_url = 'https://jeweltheme.com';
+				$amp_url = 'https://jeweltheme.com';
                 return;
             }
-
-//			$post_id 	 = get_the_ID();
-//			$request_url = get_permalink( get_queried_object_id() );
-//			$explode_url = explode('/', $request_url);
-//			$amp_append = 'amp';
-//			array_splice( $explode_url, 4, 0, $amp_append );
-//			$impode_url = implode('/', $explode_url);
-//			$amp_url = untrailingslashit($impode_url);
-//
-
-//			$current_url = home_url( $wp->request );
-//			$explode_path = explode("/", $current_url);
-//			$amp_append = [AMP_QUERY_VAR];
-//			array_splice($explode_path, -2, 0, $amp_append);
-//			$impode_url = implode('/', $explode_path);
-//			$amp_url = untrailingslashit($impode_url);;
-
-//			print_r( $amp_append );
-//			print_r( $amp_urls );
-//			print_r( $amp_url );
-
-
-//			$post_id 	 = get_the_ID();
-//			$request_url = get_permalink( get_queried_object_id() );
-//			$explode_url = explode('/', $request_url);
-//			$amp_append = 'amp';
-//			array_splice( $explode_url, 4, 0, $amp_append );
-//			$impode_url = implode('/', $explode_url);
-//			$amp_url = untrailingslashit($impode_url);
 
 
 		return $amp_url;
@@ -663,18 +650,40 @@ class Ultimate_AMP{
 	 * Automatic Redirect to AMP version of Mobile Users
 	 */
 	public function uamp_auto_redirect_to_amp(){
-//		if ( ! is_amp_endpoint() ) {
+
+//		if ( ! $this->uamp_is_amp_endpoint() ) {
 //			return;
 //		}
 
 
 //		$redirect_url = '';
 		$redirect_url = $this->uamp_generate_amphtml();
+
+//        if(is_home() || is_front_page()){
+//			$redirect_url = $this->uamp_home_template();
+//        }
+
 		$request_url = $this->get_requested_url();
 
 
-		print_r($redirect_url);
+		//print_r( $this->uamp_home_template());
+//		print_r($redirect_url);
 		print_r($request_url);
+
+		if( $this->uamp_is_amp_endpoint()){
+//			print_r('Liton Arefin, This is Homepage');
+
+			if(is_home()){
+				print_r('Liton Arefin, This is Homepage');
+            }
+			return $this->template_loader();
+        }
+
+
+//		print_r($redirect_url);
+
+//		print_r( $this->uamp_home_template());
+
 
 //		$is_amp_endpoint = $this->uamp_is_amp_endpoint();
 

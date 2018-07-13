@@ -33,6 +33,7 @@ class UltimateAmpAutoload {
 	 */
 	private static $_classmap = array(
 		'Ultimate_AMP_Helper'                         => 'inc/class-amp-helper',
+		'UampAdminOptions'                         	  => 'inc/admin/admin-options',
 		'TemplateManager'                             => 'templates/class-template-manager',
 		'Template_Loader'                             => 'lib/class-template-loader',
 		'Ultimate_Template_Loader'                    => 'inc/class-ultimate-template-loader',

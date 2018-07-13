@@ -20,7 +20,7 @@
 		 * @since 1.0.0
 		 * @type string
 		 */
-		protected $theme_template_directory = 'templates/template-one';
+//		protected $theme_template_directory = 'templates/template-one';
 
 		/**
 		 * Reference to the root directory path of this plugin.
