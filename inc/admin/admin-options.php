@@ -26,6 +26,7 @@
 			public $sections = [];
 			public $plugin;
 			public $ReduxFramework;
+			private $uamp_pro = "This is Demo Intro Text";
 
 			public function __construct() {
 				add_action( 'plugins_loaded', [$this, 'initSettings'], 10);
@@ -100,7 +101,7 @@
 					// Please visit: https://developers.google.com/fonts/docs/developer_api#Auth
 					// Must be defined to add google fonts to the typography module
 					'update_notice'         => false,
-					'intro_text'            => $uamp_pro,
+					'intro_text'            => $this->uamp_pro,
 					'async_typography' 		=> false,
 					'show_options_object' 	=> false,
 					// Use a asynchronous font on the front end or font string
@@ -204,7 +205,7 @@
 					'icon' => 'el-icon-twitter'
 				];
 
-				$uamp_pro = "This is Demo Intro Text";
+
 
 			}
 		}

@@ -10,6 +10,32 @@ $sections[] = array(
     'fields' => array(
 
         $fields =
+
+			array(
+				'id'       => 'mobile_amp',
+				'type'     => 'button_set',
+				'title'    => esc_html__( 'Redirect Mobile Users', 'uamp' ),
+				'subtitle' => esc_html__( 'Enable/Disable Redirect Mobile Users', 'uamp' ),
+				'options'  => array(
+					'enable'     => esc_html__( 'Enable', 'uamp'),
+					'disable'    => esc_html__( 'Disable', 'uamp'),
+				),
+				'default'  => 'enable'
+			),
+
+			array(
+				'id'       => 'enable_debug_mode',
+				'type'     => 'button_set',
+				'title'    => esc_html__( 'Debug Mode?', 'uamp' ),
+				'subtitle' => esc_html__( 'Enable/Disable Debug Mode', 'uamp' ),
+				'options'  => array(
+					'enable'     => esc_html__( 'Enable', 'uamp'),
+					'disable'    => esc_html__( 'Disable', 'uamp'),
+				),
+				'default'  => 'disable'
+			),
+
+
                 array(
                         'id' => 'admin_logo',
                         'type' => 'media',
