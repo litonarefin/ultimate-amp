@@ -15,7 +15,7 @@ include_once( ABSPATH . 'wp-admin/includes/media.php' );
 class Ultimate_AMP_Abstract_Template {
 
 	const TEMPLATE_DIR = 'templates';
-	const TEMPLATE_PART_DIR = 'templates/template-one';
+	const TEMPLATE_PART_DIR = 'templates/parts';
 	const TEMPLATE_CART_DIR = 'templates/add-to-cart';
 	const STYLE_DIR = 'css';
 	const SITE_ICON_SIZE = 32;
@@ -48,7 +48,7 @@ class Ultimate_AMP_Abstract_Template {
 	}
 
 	public function get_embedded_elements() {
-		return apply_filters( 'amphtml_embedded_elements', $this->embedded_elements );
+		return apply_filters( 'uamp_embedded_elements', $this->embedded_elements );
 	}
 
 	public function add_embedded_element( $new_element ) {
@@ -84,13 +84,13 @@ class Ultimate_AMP_Abstract_Template {
 	public function get_template_path( $filename ) {
 		//theme templates
 		$path[] = locate_template( array (
-			AMPHTML()->get_plugin_folder_name() . DIRECTORY_SEPARATOR . $filename . '.php'
+			Ultimate_AMP()->get_plugin_folder_name() . DIRECTORY_SEPARATOR . $filename . '.php'
 		), false );
 		$path[] = locate_template( array (
-			AMPHTML()->get_plugin_folder_name() . DIRECTORY_SEPARATOR . 'parts' . DIRECTORY_SEPARATOR . $filename . '.php'
+			Ultimate_AMP()->get_plugin_folder_name() . DIRECTORY_SEPARATOR . 'parts' . DIRECTORY_SEPARATOR . $filename . '.php'
 		), false );
 		$path[] = locate_template( array (
-			AMPHTML()->get_plugin_folder_name() . DIRECTORY_SEPARATOR . 'add-to-cart' . DIRECTORY_SEPARATOR . $filename . '.php'
+			Ultimate_AMP()->get_plugin_folder_name() . DIRECTORY_SEPARATOR . 'add-to-cart' . DIRECTORY_SEPARATOR . $filename . '.php'
 		), false );
 		//plugin templates
 		$path[] = $this->get_dir_path( self::TEMPLATE_DIR ) . DIRECTORY_SEPARATOR . $filename . '.php';
@@ -109,7 +109,7 @@ class Ultimate_AMP_Abstract_Template {
 	}
 
 	protected function get_dir_path( $sub_dir ) {
-		$amphtml_dir = AMPHTML()->get_amphtml_path();
+		$amphtml_dir = Ultimate_AMP()->plugin_path();
 
 		if ( is_dir( $amphtml_dir . $sub_dir ) ) {
 			return $amphtml_dir . $sub_dir;
