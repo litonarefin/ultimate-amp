@@ -225,7 +225,8 @@ define( 'AMP_QUERY', 'amp');
 
 			require_once UAMP_DIR . '/inc/class-uamp-template-manager.php';
 			require_once UAMP_DIR . '/inc/class-uamp-template.php';
-			require_once UAMP_DIR . '/inc/class-uamp-shortcodes.php';
+//			require_once UAMP_DIR . '/inc/class-uamp-sanitize.php';
+//			require_once UAMP_DIR . '/inc/class-uamp-shortcodes.php';
 
 //			require_once( 'includes/class-amphtml-template-abstract.php' );
 //			require_once( 'includes/class-amphtml-template.php' );
@@ -961,7 +962,6 @@ define( 'AMP_QUERY', 'amp');
 			do_action( 'before_load_amphtml', $queried_object_id );
 
 			$redirect_url = $this->get_redirect_url( $wp, $queried_object_id );
-
 			if ( $redirect_url ) {
 				wp_redirect( $redirect_url );
 				exit();
@@ -970,15 +970,23 @@ define( 'AMP_QUERY', 'amp');
 			include_once( 'inc/class-uamp-template.php' );
 
 			$this->template = new Ultimate_AMP_Template( $this->options );
-			print_r( $this->template->load() );
 
 			new Ultimate_AMP_Shortcode( $this->template );
 
+//			print_r($this->template);
+
 			if ( $this->is_amp() ) {
+
 				$this->template->load();
-				$this->template = apply_filters( 'uamp_template_load_after', $this->template );
-				do_action( 'uamp_before_render', $this->template );
+
+				$this->template = apply_filters( 'amphtml_template_load_after', $this->template );
+
+//				print_r( $this->template );
+
+				do_action( 'amphtml_before_render', $this->template );
 				echo $this->template->render();
+
+
 				exit();
 			}
 		}

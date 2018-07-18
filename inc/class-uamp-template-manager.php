@@ -48,7 +48,7 @@ class Ultimate_AMP_Abstract_Template {
 	}
 
 	public function get_embedded_elements() {
-		return apply_filters( 'uamp_embedded_elements', $this->embedded_elements );
+		return apply_filters( 'amphtml_embedded_elements', $this->embedded_elements );
 	}
 
 	public function add_embedded_element( $new_element ) {
@@ -66,12 +66,16 @@ class Ultimate_AMP_Abstract_Template {
 	}
 
 	public function render( $filename = '' ) {
-		//		var_dump($filename);
+
+
+
 		if ( ! $filename ) {
 			$filename = $this->template;
 		}
 
 		$template_path = $this->get_template_path( $filename );
+
+
 
 		if ( file_exists( $template_path ) ) {
 			ob_start();
@@ -96,6 +100,7 @@ class Ultimate_AMP_Abstract_Template {
 		$path[] = $this->get_dir_path( self::TEMPLATE_DIR ) . DIRECTORY_SEPARATOR . $filename . '.php';
 		$path[] = $this->get_dir_path( self::TEMPLATE_PART_DIR ) . DIRECTORY_SEPARATOR . $filename . '.php';
 		$path[] = $this->get_dir_path( self::TEMPLATE_CART_DIR ) . DIRECTORY_SEPARATOR . $filename . '.php';
+
 
 		foreach ( $path as $template ) {
 			if ( file_exists( $template ) ) {

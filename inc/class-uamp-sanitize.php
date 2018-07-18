@@ -48,4 +48,21 @@
 			}
 		}
 
+		public function term_description( $description ) {
+			$description = $this->sanitize_content( $description );
+
+			return do_shortcode( $description->save() );
+		}
+
+		public function sanitize_content( $content ) { //todo move all methods to sanitize element
+			$this->load_content( $content )->sanitize_youtube()->sanitize_vimeo()->sanitize_vine()->sanitize_audio()->sanitize_soundcloud()->sanitize_iframe();
+
+			return $this->get_content();
+		}
+
+
+		public function get_dom_model() {
+			return new simple_html_dom();
+		}
+
 	}

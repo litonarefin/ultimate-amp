@@ -5,6 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) { die(); }
 require_once 'class-uamp-template-manager.php';
 require_once 'class-uamp-sanitize.php';
 
+
 class Ultimate_AMP_Template extends Ultimate_AMP_Abstract_Template {
 
 	public function __construct( $options ) {
@@ -81,6 +82,27 @@ class Ultimate_AMP_Template extends Ultimate_AMP_Abstract_Template {
 		echo PHP_EOL . ".amphtml-title div, .footer .inner { max-width: {$content_width}px; margin: 0 auto;}" . "#main .inner { max-width: {$main_content_width}px; } " . $this->get_element_fonts() . $this->get_element_colors();
 	}
 
+	public function get_template_name( $element ) {
+		$name = '';
+		if ( $this->options->get( $element ) ) {
+			switch ( $element ) {
+				case false !== strpos( $element, '_ad_' ):
+					$name = $this->set_ad_data( $element ) ? 'ad' : '';
+					break;
+				case false !== strpos( $element, 'custom_html' ):
+					$name = $this->set_custom_html( $element ) ? 'custom_html' : '';
+					break;
+				default:
+					$template_name = $this->options->get( $element, 'template_name' );
+					$name          = $template_name ? $template_name : $element;
+					break;
+			}
+		}
+
+		return apply_filters( 'amphtml_template_name', $name, $element, $this );
+	}
+
+
 	public function load() {
 
 		$social_share_script = array (
@@ -93,20 +115,21 @@ class Ultimate_AMP_Template extends Ultimate_AMP_Abstract_Template {
 			'src'  => 'https://cdn.ampproject.org/v0/amp-facebook-like-0.1.js'
 		);
 
-		print_r('Liton 1');
 
 		$is_loaded = apply_filters( 'amphtml_template_head', false, $this );
-		print_r($is_loaded);
+//		print_r($is_loaded);
 
-		print_r(apply_filters( 'uamp_template_load', false, $this ));
+//		print_r(apply_filters( 'uamp_template_load', false, $this ));
 
 		if ( $is_loaded ) {
 			return $this;
 		}
 
+//		print_r('Liton 1');
+
 		switch ( true ) {
 			case is_front_page() && is_home():
-//				print_r('Liton Home');
+				print_r('Liton Home');
 //				$this->set_template_content( 'archive' );
 //				$this->set_blocks( 'blog' );
 //				$this->set_schema_metadata();
@@ -160,10 +183,12 @@ class Ultimate_AMP_Template extends Ultimate_AMP_Abstract_Template {
 //				$this->title = get_the_archive_title();
 //				$this->set_schema_metadata( get_the_archive_description() );
 //				break;
-//			case is_404():
-//				$this->set_template_content( 'single-content' );
-//				$this->set_blocks( '404' );
-//				break;
+			case is_404():
+				print_r('404 Not Fount');
+				$this->set_template_content( 'single-content' );
+//				print_r($this->set_template_content( 'single-content' ));
+				$this->set_blocks( '404' );
+				break;
 //			case is_search():
 //				$this->set_template_content( 'archive' );
 //				$this->set_blocks( 'search' );
@@ -192,6 +217,12 @@ class Ultimate_AMP_Template extends Ultimate_AMP_Abstract_Template {
 
 	public function get_blocks() {
 		return $this->blocks;
+	}
+
+	public function get_permalink() {
+		global $wp;
+
+		return home_url( add_query_arg( array (), $wp->request ) );
 	}
 
 	public function set_schema_metadata( $post = null, $description = '' ) {
@@ -283,20 +314,22 @@ class Ultimate_AMP_Template extends Ultimate_AMP_Abstract_Template {
 
 
 	public function get_template_elements( $type, $return_default = true ) {
+//
+//		if ( false === ( $order = get_transient( 'amphtml_template_blocks_order' ) ) ) {
+//			$order = get_option( 'amphtml_template_blocks_order' );
+//			$order = maybe_unserialize( $order );
+//			set_transient( 'amphtml_template_blocks_order', $order );
+//		}
+//
+//		if ( isset( $order[ $type ] ) ) {
+//			return $order[ $type ];
+//		} else if ( $return_default ) {
+//			return $this->type;
+//		} else {
+//			return false;
+//		}
 
-		if ( false === ( $order = get_transient( 'amphtml_template_blocks_order' ) ) ) {
-			$order = get_option( 'amphtml_template_blocks_order' );
-			$order = maybe_unserialize( $order );
-			set_transient( 'amphtml_template_blocks_order', $order );
-		}
-
-		if ( isset( $order[ $type ] ) ) {
-			return $order[ $type ];
-		} else if ( $return_default ) {
-			return $this->type ;
-		} else {
-			return false;
-		}
+		return $this->type;
 	}
 
 	public function get_title( $id ) {
