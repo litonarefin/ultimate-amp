@@ -5,10 +5,8 @@
 
 
 	if ( ! function_exists( 'file_get_html' ) ) {
-		include_once Ultimate_AMP()->plugin_path() . '/lib/simple_html_dom.php';
+		include_once UAMP_DIR . '/lib/simple_html_dom.php';
 	}
-
-	include_once Ultimate_AMP()->plugin_path() . '/lib/Fastimage.php';
 
 	class Ultimate_AMP_Sanitize {
 
@@ -55,14 +53,38 @@
 		}
 
 		public function sanitize_content( $content ) { //todo move all methods to sanitize element
-			$this->load_content( $content )->sanitize_youtube()->sanitize_vimeo()->sanitize_vine()->sanitize_audio()->sanitize_soundcloud()->sanitize_iframe();
+//			$this->load_content( $content )->sanitize_youtube()->sanitize_vimeo()->sanitize_vine()->sanitize_audio()->sanitize_soundcloud()->sanitize_iframe();
 
 			return $this->get_content();
+		}
+
+		public function get_content() {
+			foreach ( $this->content->find( 'font' ) as $tag ) {
+				$tag->outertext = $tag->innertext;
+			}
+
+			$illegal_tags = implode( ',', apply_filters( 'amphtml_illegal_tags', array ( 'script, noscript, style, link' ) ) );
+
+			foreach ( $this->content->find( $illegal_tags ) as $tag ) {
+				$tag->outertext = "";
+			}
+
+			return $this->content;
+		}
+
+		public function set_content( $content ) {
+			$this->content = $content;
 		}
 
 
 		public function get_dom_model() {
 			return new simple_html_dom();
+		}
+
+		public function load_content( $content ) {
+			$this->content = $this->html_dom->load( $content );
+
+			return $this;
 		}
 
 	}

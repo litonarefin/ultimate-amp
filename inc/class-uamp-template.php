@@ -58,9 +58,9 @@ class Ultimate_AMP_Template extends Ultimate_AMP_Abstract_Template {
 //		}
 
 
-//		$additional_styles = apply_filters( 'amphtml_font_styles', ':400,700,400italic,500,500italic' );
-//		echo '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto' . $additional_styles . '">' . PHP_EOL;
-//		$this->fonts[ 'id' ] = str_replace( '+', ' ', 'Roboto' );
+		$additional_styles = apply_filters( 'amphtml_font_styles', ':400,700,400italic,500,500italic' );
+		echo '<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto' . $additional_styles . '">' . PHP_EOL;
+		$this->fonts[ 'id' ] = str_replace( '+', ' ', 'Roboto' );
 
 	}
 
@@ -117,28 +117,48 @@ class Ultimate_AMP_Template extends Ultimate_AMP_Abstract_Template {
 
 
 		$is_loaded = apply_filters( 'amphtml_template_head', false, $this );
-//		print_r($is_loaded);
+//		print_r($this);
 
 //		print_r(apply_filters( 'uamp_template_load', false, $this ));
 
 		if ( $is_loaded ) {
-			return $this;
+			return $template;
 		}
 
-//		print_r('Liton 1');
+
+		require_once 'class-uamp-template-loader.php';
+
+		$template = new Ultimate_Template_Loader();
+
 
 		switch ( true ) {
 			case is_front_page() && is_home():
-				print_r('Liton Home');
+				$template->get_template_part('front-page');
+//				$template->get_template_part('archive');
+
+
+//				print_r('Liton Home');
+//				$this->set_template_content( 'home' );
+//				$this->set_blocks( 'home' );
 //				$this->set_template_content( 'archive' );
 //				$this->set_blocks( 'blog' );
 //				$this->set_schema_metadata();
 				break;
 			case is_front_page():
-				print_r('Arefin');
+//				print_r('Arefin');
+				$template->get_template_part('front-page');
+
+//				$this->set_template_content( 'home' );
+//				$this->set_blocks( 'home' );
+//
+//
+//
 //				$this->set_template_content( 'single-content' );
 //				$current_post_id = get_option( 'page_on_front' );
+//				print_r($current_post_id);
+
 //				$this->set_post( $current_post_id );
+
 //				$this->set_blocks( 'pages' );
 //				if ( $this->options->get( 'page_social_share' ) ) {
 //					$this->add_embedded_element( $social_share_script );
@@ -148,13 +168,21 @@ class Ultimate_AMP_Template extends Ultimate_AMP_Abstract_Template {
 //				}
 				break;
 			case is_home():
-				print_r('Liton Arefin');
-//				$this->set_template_content( 'archive' );
-//				$this->set_blocks( 'blog' );
+//				print_r('Liton Arefin');
+
+				$template->get_template_part('home');
+
+//				$this->set_template_content( 'home' );
+//				$this->set_blocks( 'home' );
 //				$this->set_schema_metadata();
 				break;
-//			case is_single():
-//				$this->set_template_content( 'single-content' );
+			case is_single():
+
+//				echo "This is Single Post";
+				$template->get_template_part('single');
+
+
+//				$this->set_template_content( 'single' );
 //				$current_post_id = get_the_ID();
 //				$this->set_post( $current_post_id );
 //				$this->set_blocks( 'posts' );
@@ -164,30 +192,37 @@ class Ultimate_AMP_Template extends Ultimate_AMP_Abstract_Template {
 //				if ( $this->options->get( 'social_like_button' ) ) {
 //					$this->add_embedded_element( $social_like_script );
 //				}
-//				break;
-//			case is_page():
+				break;
+			case is_page():
+
+//				echo "Pagess";
+				$template->get_template_part('page');
+
 //				$this->set_template_content( 'single-content' );
+//				$this->set_template_content( 'page' );
 //				$current_post_id = get_the_ID();
 //				$this->set_post( $current_post_id );
-//				$this->set_blocks( 'pages' );
+//				$this->set_blocks( 'page' );
 //				if ( $this->options->get( 'page_social_share' ) ) {
 //					$this->add_embedded_element( $social_share_script );
 //				}
 //				if ( $this->options->get( 'social_like_button' ) ) {
 //					$this->add_embedded_element( $social_like_script );
 //				}
-//				break;
-//			case is_archive():
+				break;
+			case is_archive():
+				$template->get_template_part('archive');
+
 //				$this->set_template_content( 'archive' );
 //				$this->set_blocks( 'archives' );
 //				$this->title = get_the_archive_title();
 //				$this->set_schema_metadata( get_the_archive_description() );
-//				break;
+				break;
 			case is_404():
-				print_r('404 Not Fount');
-				$this->set_template_content( 'single-content' );
-//				print_r($this->set_template_content( 'single-content' ));
-				$this->set_blocks( '404' );
+				$template->get_template_part('404');
+
+//				$this->set_template_content( 'single-content' );
+//				$this->set_blocks( '404' );
 				break;
 //			case is_search():
 //				$this->set_template_content( 'archive' );
@@ -199,20 +234,130 @@ class Ultimate_AMP_Template extends Ultimate_AMP_Abstract_Template {
 	}
 
 
+	public function set_post( $id, $set_meta = true ) {
+		// Image gallery just for single post
+		add_shortcode( 'gallery', array ( $this, 'gallery_shortcode' ) );
+
+		$this->post               = get_post( $id );
+		$this->ID                 = $this->post->ID;
+		$this->title              = $this->get_title( $this->ID );
+		$this->publish_timestamp  = get_the_date( 'U', $this->ID );
+		$this->modified_timestamp = get_post_modified_time( 'U', false, $this->post );
+		$this->author             = get_userdata( $this->post->post_author );
+		$this->content            = $this->get_content( $this->post );
+		$this->content            = apply_filters( 'amphtml_single_content', $this->content );
+		$this->content            = $this->sanitizer->sanitize_content( $this->content );
+		$this->content            = $this->multipage_content( $this->content );
+		$this->featured_image     = $this->get_featured_image();
+
+		if ( $set_meta ) {
+			$this->metadata = $this->get_schema_metadata( $this->post, $this->get_post_excerpt_by_id( $id ) );
+		}
+	}
+
+
+
+	public function get_content( $post ) {
+		$content = $post->post_content;
+
+		if ( get_post_meta( $post->ID, "amphtml-override-content", true ) ) {
+			$content = get_post_meta( $post->ID, "amphtml-custom-content", true );
+			remove_filter( 'the_content', 'siteorigin_panels_filter_content' );
+		}
+//		if ( $this->options->get( 'default_the_content' ) ) {
+			$this->remove_custom_the_content_hooks();
+//		}
+
+		return apply_filters( 'the_content', $content );
+	}
+
+
+	public function remove_custom_the_content_hooks() {
+		global $wp_filter;
+
+		$hooks    = $wp_filter['the_content'];
+		$defaults = $this->get_default_the_content_hooks();
+
+		if ( class_exists( 'WP_Hook' ) ) {
+			$hooks = $hooks->callbacks;
+		}
+
+		foreach ( $hooks as $priority => $functions ) {
+
+			foreach ( $functions as $name => $function ) {
+
+				$function_name = ( is_array( $function['function'] ) ) ? $function['function'][1] : $function['function'];
+
+				if ( ! isset( $defaults[ $priority ] ) || ! in_array( $function_name, $defaults[ $priority ] ) ) {
+					if ( isset( $wp_filter['the_content'] ) ) {
+						if ( class_exists( 'WP_Hook' ) ) {
+							unset( $wp_filter['the_content']->callbacks[ $priority ][ $name ] );
+						} else {
+							unset( $wp_filter['the_content'][ $priority ][ $name ] );
+						}
+					}
+				}
+
+			}
+
+			if ( ! count( $wp_filter['the_content'][ $priority ] ) ) {
+				unset( $wp_filter['the_content'][ $priority ] );
+			}
+
+		}
+	}
+
+
+	public function get_default_the_content_hooks() {
+		return apply_filters( 'amphtml_the_content', array (
+			'11' => array ( 'capital_P_dangit', 'do_shortcode' ),
+			'10' => array (
+				'wptexturize',
+				'convert_smilies',
+				'wpautop',
+				'shortcode_unautop',
+				'prepend_attachment',
+				'wp_make_content_images_responsive',
+				'amphtml_shortcode_fix',
+				'amphtml_content_ads',
+			),
+			'8'  => array ( 'run_shortcode', 'autoembed' ),
+		) );
+	}
+
 
 	public function the_template_content() {
 		echo $this->render( $this->template_content );
+
 	}
 
 	public function set_template_content( $template ) {
-		$this->template_content = $template;
+
+		require_once UAMP_DIR . '/inc/class-uamp-template-loader.php';
+		$lit = new Ultimate_Template_Loader();
+
+//		$this->template_content = $template;
+		$this->template_content = $lit->get_template_part( $template );
+//		print_r($this->template_content);
+
 		add_action( 'amphtml_template_content', array ( $this, 'the_template_content' ) );
 
 		return $this;
 	}
 
 	public function set_blocks( $type, $default = true ) {
+
+
+//		require_once UAMP_DIR . '/inc/class-uamp-template-loader.php';
+//		$lit = new Ultimate_Template_Loader();
+
+//		print_r( $lit->get_template_part('header'));
+//		return $lit->get_template_part('header');
+//		echo $lit->get_template_part('single');
+
+
 		$this->blocks = $this->get_template_elements( $type, $default );
+//		$this->blocks = $lit->get_template_part( $type );
 	}
 
 	public function get_blocks() {
@@ -328,6 +473,15 @@ class Ultimate_AMP_Template extends Ultimate_AMP_Abstract_Template {
 //		} else {
 //			return false;
 //		}
+
+
+
+		if ( $return_default ) {
+			return $this->type;
+		} else {
+			return false;
+		}
+//		print_r('LI');
 
 		return $this->type;
 	}

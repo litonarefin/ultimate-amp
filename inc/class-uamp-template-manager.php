@@ -75,8 +75,6 @@ class Ultimate_AMP_Abstract_Template {
 
 		$template_path = $this->get_template_path( $filename );
 
-
-
 		if ( file_exists( $template_path ) ) {
 			ob_start();
 			include( $template_path );
@@ -113,10 +111,11 @@ class Ultimate_AMP_Abstract_Template {
 		return $this->options->get( $option );
 	}
 
-	protected function get_dir_path( $sub_dir ) {
-		$amphtml_dir = Ultimate_AMP()->plugin_path();
 
-		if ( is_dir( $amphtml_dir . $sub_dir ) ) {
+
+	protected function get_dir_path( $sub_dir ) {
+
+		if ( is_dir( UAMP_PLUGIN_DIR_URL . $sub_dir ) ) {
 			return $amphtml_dir . $sub_dir;
 		}
 

@@ -34,8 +34,9 @@ class UltimateAmpAutoload {
 	private static $_classmap = array(
 		'Ultimate_AMP_Helper'                         => 'inc/class-amp-helper',
 		'UampAdminOptions'                         	  => 'inc/admin/admin-options',
-		'Ultimate_AMP_Abstract_Template'              => 'inc/class-uamp-template-manager',
-		'Ultimate_AMP_Template'              		  => 'inc/class-uamp-template',
+		'Template_Loader'                         	  => 'lib/class-uamp-template-loader',
+//		'Ultimate_AMP_Abstract_Template'              => 'inc/class-uamp-template-manager',
+//		'Ultimate_AMP_Template'              		  => 'inc/class-uamp-template',
 		'Ultimate_AMP_Sanitize'              		  => 'inc/class-uamp-sanitize',
 		'Ultimate_AMP_Shortcode'              		  => 'inc/class-uamp-shortcodes',
 		'FastImage'              					  => 'lib/Fastimage',
