@@ -27,7 +27,7 @@ class Ultimate_AMP_Template extends Ultimate_AMP_Abstract_Template {
 //		$this->default_logo = $this->options->get( 'default_logo' );
 //		$this->favicon      = $this->get_favicon();
 
-		add_action( 'amphtml_template_head', array ( $this, 'page_fonts' ) );
+//		add_action( 'amphtml_template_head', array ( $this, 'page_fonts' ) );
 		add_action( 'amphtml_template_css', array ( $this, 'get_custom_css' ) );
 
 		/*
@@ -42,6 +42,16 @@ class Ultimate_AMP_Template extends Ultimate_AMP_Abstract_Template {
 		add_action( 'amphtml_before_header', array ( $this, 'remove_term_link_filter' ) );
 	}
 
+	public function update_menu_item_url( $item ) {
+		$avoid_amp_class = apply_filters( 'amphtml_no_amp_menu_link', 'no-amp' );
+
+		if ( 'custom' != $item->object && false === array_search( $avoid_amp_class, $item->classes ) ) {
+			$id        = ( $item->type == 'taxonomy' ) ? '' : $item->object_id;
+			$item->url = $this->get_amphtml_link( $item->url, $id );
+		}
+
+		return $item;
+	}
 
 
 	public function page_fonts() {

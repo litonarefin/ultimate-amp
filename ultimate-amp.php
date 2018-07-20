@@ -115,6 +115,8 @@ define( 'AMP_QUERY', 'amp');
 			//$this->uamp_check_debug_mode();
 
 			add_action( 'init', [ $this, 'uamp_init' ], 99 );
+			add_action('init', array( $this, 'uamp_register_menus'), 99);
+
 
 		}
 
@@ -146,7 +148,6 @@ define( 'AMP_QUERY', 'amp');
 
 //          16-7-18
 			//Register Ultimate AMP Menus
-//			add_action('init', [$this, 'uamp_register_menus']);
 
 			//After Theme Setup
 //          16-7-18
@@ -574,7 +575,7 @@ define( 'AMP_QUERY', 'amp');
 
 
 		public function uamp_custom_template() {
-			TemplateManager::uamp_include_template_file();
+			Ultimate_AMP_Helper::uamp_include_template_file();
 		}
 
 
@@ -583,15 +584,15 @@ define( 'AMP_QUERY', 'amp');
 		 */
 		public function uamp_register_menus() {
 			register_nav_menus(
-				[
+				array(
 					'uamp-main-menu' => __('Ultimate AMP Main Menu', UAMP_TD),
-				]
+                )
 			);
 
 			register_nav_menus(
-				[
+				array(
 					'uamp-footer-menu' => __('Ultimate AMP Footer Menu', UAMP_TD),
-				]
+                )
 			);
 		}
 
@@ -738,6 +739,7 @@ define( 'AMP_QUERY', 'amp');
 
 
 		public function enqueue_components_scripts() { ?>
+            <script async="" src="https://cdn.ampproject.org/v0.js"></script>
             <script custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"
                     async=""></script>
             <script custom-element="amp-sidebar" src="https://cdn.ampproject.org/v0/amp-sidebar-0.1.js"

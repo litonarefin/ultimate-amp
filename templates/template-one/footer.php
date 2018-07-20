@@ -1,3 +1,7 @@
+<?php 
+    global $post_id;
+    $uamp = new AMP_Post_Template($post_id);
+?>
     <footer class="ampstart-footer flex flex-column items-center px3 ">
         <nav class="ampstart-footer-nav">
             <ul class="list-reset flex flex-wrap mb3">

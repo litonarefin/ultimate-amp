@@ -1,5 +1,5 @@
 <!doctype html>
-<html <?php //TemplateManager::uamp_language_attributes(); ?> amp>
+<html <?php Ultimate_AMP_Helper::uamp_language_attributes(); ?> amp>
 <head>
     <meta charset="utf-8">
     <link rel="dns-prefetch" href="https://cdn.ampproject.org">
@@ -11,7 +11,7 @@
 	<?php do_action('uamp/template/head'); ?>
 
 </head>
-<body <?php //TemplateManager::uamp_body_class();?>>
+<body <?php Ultimate_AMP_Helper::uamp_body_class();?>>
 
     <header itemscope itemtype="https://schema.org/WPHeader" class="ampstart-headerbar fixed flex justify-start items-center top-0 left-0 right-0 pl2 pr4">
         <div role="button" aria-label="open sidebar" on="tap:header-sidebar.toggle" tabindex="0" class="ampstart-navbar-trigger  pr2  ">☰

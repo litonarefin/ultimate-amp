@@ -58,10 +58,10 @@
 			<h2 class="mb3"><?php comments_number( esc_html('0 Comment' ,'uamp') , esc_html('1 Comment' ,'uamp'), esc_html('% Comments' ,'uamp') );?></h2>
 
 			<ul class="list-reset">
-				<?php TemplateManager::uamp_comments_list();?>
+				<?php Ultimate_AMP_Helper::uamp_comments_list();?>
 			</ul>
 
-			<a href="<?php TemplateManager::uamp_comment_link();?>" class="button add-comment text-center mt3">
+			<a href="<?php Ultimate_AMP_Helper::uamp_comment_link();?>" class="button add-comment text-center mt3">
 				<?php echo _e('Add Comment', 'uamp'); ?>
 			</a>
 
