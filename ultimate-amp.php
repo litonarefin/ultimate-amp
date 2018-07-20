@@ -157,7 +157,7 @@ define( 'AMP_QUERY', 'amp');
 			register_deactivation_hook(__FILE__, [$this, 'uamp_deactivate']);
 
 			// Default AMP Plugin
-//			add_action('plugins_loaded', [$this, 'uamp_deafult_amp_plugin'], 10);
+			add_action('plugins_loaded', [$this, 'uamp_deafult_amp_plugin'], 10);
 
 			// Load AMP Template Files
 //			add_filter('amp_post_template_file', [$this, 'uamp_custom_template'], 10, 2);
@@ -1339,7 +1339,7 @@ define( 'AMP_QUERY', 'amp');
 
 //			define('AMP__FILE__', __FILE__);
 			if (!defined('AMP__DIR__')) {
-				define('AMP__DIR__', plugin_dir_path(__FILE__) . 'inc/amp/');
+				define('AMP__DIR__', plugin_dir_path(__FILE__) . '/inc/amp/');
 			}
 //			define('AMP__VERSION', '0.7.1');
 

@@ -4,6 +4,8 @@
 	 * Author URL: https://jeweltheme.com
 	 * Date: 7/9/18
 	 */
+	global $post_id;
+	
 	$uamp = new AMP_Post_Template($post_id);
 	?>
 

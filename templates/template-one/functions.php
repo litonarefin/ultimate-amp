@@ -80,6 +80,7 @@
 	<?php }
 
 	function uamp_template_post_featured_image(){
+        global $post_id;
 		$uamp = new AMP_Post_Template($post_id);
         if(is_single()){
 			$uamp->load_parts(array('featured-image'));
@@ -92,6 +93,7 @@
     }
 
 	function uamp_template_header(){
+            global $post_id;
             $uamp = new AMP_Post_Template($post_id);
 			require_once UAMP_DIR . '/templates/template-one/header.php';
     }

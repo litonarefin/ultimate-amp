@@ -71,7 +71,7 @@ class Ultimate_AMP_Template extends Ultimate_AMP_Abstract_Template {
 		return $this->get_amphtml_link( $termlink );
 	}
 	public function get_amphtml_link( $link, $id = '' ) {
-		return $this->options->get_amphtml_link( $link, $id );
+		return '';
 	}
 
 	public function get_custom_css() {
@@ -104,6 +104,7 @@ class Ultimate_AMP_Template extends Ultimate_AMP_Abstract_Template {
 
 
 	public function load() {
+		global $post_id;
 
 		$social_share_script = array (
 			'slug' => 'amp-social-share',
@@ -125,104 +126,40 @@ class Ultimate_AMP_Template extends Ultimate_AMP_Abstract_Template {
 			return $template;
 		}
 
-
+//		require_once( UAMP_DIR . '/inc/amp/includes/templates/class-amp-post-template.php');
 		require_once 'class-uamp-template-loader.php';
+		require_once UAMP_DIR . '/templates/template-one/functions.php';
+//		include_once UAMP_DIR . '/lib/simple_html_dom.php';
 
 		$template = new Ultimate_Template_Loader();
+		require_once UAMP_DIR . '/inc/amp/amp.php';
+
 
 
 		switch ( true ) {
 			case is_front_page() && is_home():
 				$template->get_template_part('front-page');
-//				$template->get_template_part('archive');
 
-
-//				print_r('Liton Home');
-//				$this->set_template_content( 'home' );
-//				$this->set_blocks( 'home' );
-//				$this->set_template_content( 'archive' );
-//				$this->set_blocks( 'blog' );
-//				$this->set_schema_metadata();
 				break;
 			case is_front_page():
-//				print_r('Arefin');
 				$template->get_template_part('front-page');
 
-//				$this->set_template_content( 'home' );
-//				$this->set_blocks( 'home' );
-//
-//
-//
-//				$this->set_template_content( 'single-content' );
-//				$current_post_id = get_option( 'page_on_front' );
-//				print_r($current_post_id);
-
-//				$this->set_post( $current_post_id );
-
-//				$this->set_blocks( 'pages' );
-//				if ( $this->options->get( 'page_social_share' ) ) {
-//					$this->add_embedded_element( $social_share_script );
-//				}
-//				if ( $this->options->get( 'social_like_button' ) ) {
-//					$this->add_embedded_element( $social_like_script );
-//				}
 				break;
 			case is_home():
-//				print_r('Liton Arefin');
-
 				$template->get_template_part('home');
-
-//				$this->set_template_content( 'home' );
-//				$this->set_blocks( 'home' );
-//				$this->set_schema_metadata();
 				break;
 			case is_single():
-
-//				echo "This is Single Post";
 				$template->get_template_part('single');
-
-
-//				$this->set_template_content( 'single' );
-//				$current_post_id = get_the_ID();
-//				$this->set_post( $current_post_id );
-//				$this->set_blocks( 'posts' );
-//				if ( $this->options->get( 'post_social_share' ) ) {
-//					$this->add_embedded_element( $social_share_script );
-//				}
-//				if ( $this->options->get( 'social_like_button' ) ) {
-//					$this->add_embedded_element( $social_like_script );
-//				}
 				break;
 			case is_page():
-
-//				echo "Pagess";
 				$template->get_template_part('page');
 
-//				$this->set_template_content( 'single-content' );
-//				$this->set_template_content( 'page' );
-//				$current_post_id = get_the_ID();
-//				$this->set_post( $current_post_id );
-//				$this->set_blocks( 'page' );
-//				if ( $this->options->get( 'page_social_share' ) ) {
-//					$this->add_embedded_element( $social_share_script );
-//				}
-//				if ( $this->options->get( 'social_like_button' ) ) {
-//					$this->add_embedded_element( $social_like_script );
-//				}
 				break;
 			case is_archive():
 				$template->get_template_part('archive');
-
-//				$this->set_template_content( 'archive' );
-//				$this->set_blocks( 'archives' );
-//				$this->title = get_the_archive_title();
-//				$this->set_schema_metadata( get_the_archive_description() );
 				break;
 			case is_404():
 				$template->get_template_part('404');
-
-//				$this->set_template_content( 'single-content' );
-//				$this->set_blocks( '404' );
 				break;
 //			case is_search():
 //				$this->set_template_content( 'archive' );

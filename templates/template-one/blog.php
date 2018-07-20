@@ -1,3 +1,5 @@
+This is Blog Page
+
 <?php do_action('uamp/template/start'); ?>
 
 <?php do_action('uamp/template/header'); ?>

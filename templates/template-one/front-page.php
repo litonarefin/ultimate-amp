@@ -1,5 +1,9 @@
-Front Page Working !!!
+This is Front Page
+<?php
+	$frontpage_id = get_option( 'page_on_front' );
 
+	$blog_id = get_option( 'page_for_posts' );
+?>
 <?php do_action('uamp/template/start'); ?>
 
 <?php do_action('uamp/template/header'); ?>
