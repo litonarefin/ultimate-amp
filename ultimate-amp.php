@@ -505,7 +505,7 @@ define( 'AMP_QUERY', 'amp');
 				require_once ( UAMP_DIR . '/inc/admin/redux-core/framework.php' );
 
 				// Register all the Main Options
-				require_once UAMP_DIR.'/inc/admin/admin-options.php';
+				require_once UAMP_DIR .'/inc/admin/admin-options.php';
 			}
 
 		}
