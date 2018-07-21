@@ -115,10 +115,11 @@ define( 'AMP_QUERY', 'amp');
 			//$this->uamp_check_debug_mode();
 
 			add_action( 'init', [ $this, 'uamp_init' ], 99 );
-			add_action('init', array( $this, 'uamp_register_menus'), 99);
-
+			add_action('init', array( $this, 'uamp_register_menus'));
+			add_action('uamp_init',[ $this, 'uamp_auto_add_amp_menu_link_insert'],9999);
 
 		}
+
 
 
 		/*
@@ -206,7 +207,7 @@ define( 'AMP_QUERY', 'amp');
 				require_once(AMP__DIR__ . '/jetpack-helper.php');
 			}
 
-//			define('UAMP_QUERY_VAR', apply_filters('amp_query_var', $this->uamp_generate_endpoint()));
+			define('UAMP_QUERY_VAR', apply_filters('amp_query_var', $this->uamp_generate_endpoint()));
 
 			if ( is_admin() ) {
 				$this->uamp_admin_init();
@@ -739,16 +740,21 @@ define( 'AMP_QUERY', 'amp');
 
 
 		public function enqueue_components_scripts() { ?>
-            <script async="" src="https://cdn.ampproject.org/v0.js"></script>
+            <script async src="https://cdn.ampproject.org/v0.js"></script>
+
+            <style amp-boilerplate="">body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate="">body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+
+
+
             <script custom-element="amp-carousel" src="https://cdn.ampproject.org/v0/amp-carousel-0.1.js"
-                    async=""></script>
+                    async></script>
             <script custom-element="amp-sidebar" src="https://cdn.ampproject.org/v0/amp-sidebar-0.1.js"
-                    async=""></script>
+                    async></script>
             <script custom-element="amp-accordion" src="https://cdn.ampproject.org/v0/amp-accordion-0.1.js"
-                    async=""></script>
-            <script custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js" async=""></script>
+                    async></script>
+            <script custom-element="amp-form" src="https://cdn.ampproject.org/v0/amp-form-0.1.js" async></script>
             <script custom-element="amp-instagram" src="https://cdn.ampproject.org/v0/amp-instagram-0.1.js"
-                    async=""></script>
+                    async></script>
 
 		<?php }
 
@@ -1329,6 +1335,32 @@ define( 'AMP_QUERY', 'amp');
 			$names = explode( '/', self::get_basename() );
 
 			return $names[0];
+		}
+
+
+
+
+
+
+		public function uamp_auto_add_amp_menu_link_insert() {
+			add_action( 'wp', [$this, 'uamp_auto_add_amp_in_link_check'] );
+		}
+
+		public function uamp_auto_add_amp_in_link_check() {
+            if($this->is_amp()){
+                add_filter( 'nav_menu_link_attributes',[$this, 'uamp_auto_add_amp_in_menu_link'], 10, 3 );
+            }
+		}
+
+
+		public function uamp_auto_add_amp_in_menu_link( $atts, $item, $args ) {
+			if( 'page' == $item->object ){
+				$id = $item->object_id;
+				$id = get_post_meta( $item->ID, '_menu_item_object_id', true );
+				$link = get_permalink($id);
+				$atts['href'] = user_trailingslashit(trailingslashit( $link ) . UAMP_QUERY_VAR);
+			}
+			return $atts;
 		}
 
 

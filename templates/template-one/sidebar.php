@@ -14,6 +14,7 @@
 				'menu_id'        => 'menu',
                 'depth'          => 2,
 				'menu_class'     => 'amp-menu',
+				'walker'		 => new UAMP_Nav_Menu_Walker()
 			]);
 
 		} elseif( is_user_logged_in()){

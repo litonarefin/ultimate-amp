@@ -1,1 +1,0 @@
-<?php echo AMPHTML_WC()->get_product_image_links( $this->product );

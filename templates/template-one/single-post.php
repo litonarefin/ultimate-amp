@@ -9,7 +9,7 @@
 	$uamp = new AMP_Post_Template($post_id);
 	?>
 
-<main id="content" role="main" class="<?php post_class();?>">
+<main id="content" role="main" <?php post_class();?>>
 	<article class="recipe-article">
 		<header>
 			<span class="ampstart-subtitle block px3 pt2 mb2">

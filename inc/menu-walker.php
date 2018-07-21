@@ -6,30 +6,8 @@
 	 * @package Custom Nav Walker
 	 */
 
-	/**
-	 *  	CUSTOM NAV WALKER
-	 *		<li class="ampstart-nav-item ampstart-nav-dropdown relative ">
-	 * 			<amp-accordion layout="container" disable-session-states="" class="ampstart-dropdown">
-	 *				<section>
-	 *					<header>Fashion</header>
-	 *					<ul class="ampstart-dropdown-items list-reset m0 p0">
-	 *						<li class="ampstart-dropdown-item">
-	 *							<a href="#" class="text-decoration-none">Styling Tips</a>
-	 *						</li>
-	 *						<li class="ampstart-dropdown-item">
-	 *							<a href="#" class="text-decoration-none">Designers</a>
-	 *						</li>
-	 *					</ul>
-	 *				</section>
-	 *			</amp-accordion>
-	 *		</li>
-	 *
-	 *
-	 */
 
 	class UAMP_Nav_Menu_Walker extends Walker_Nav_Menu {
-
-		private $show_parent_title 		 = false;
 
 		public function start_lvl( &$output, $depth = 0, $args = array() ) {
 
@@ -98,6 +76,7 @@
 				$atts['title']  = ! empty( $item->title )	? $item->title	: '';
 				$atts['target'] = ! empty( $item->target )	? $item->target	: '';
 				$atts['rel']    = ! empty( $item->xfn )		? $item->xfn	: '';
+				$atts['href']   = ! empty( $item->url ) ? $item->url : '';
 
 				// If item has_children add atts to a.
 				if ( $args->has_children && $depth === 0 ) {
@@ -119,15 +98,14 @@
 				$item_output = $args->before;
 
 
-				if ( ! empty( $item->attr_title ) )
-					$item_output .= '<a class="ampstart-nav-link"'. $attributes .'>&nbsp;';
+				if ( empty( $item->attr_title ) && !$args->has_children)
+					$item_output .= '<a class="ampstart-nav-link"'. $attributes .'>';
 				elseif( $args->has_children && $depth === 0 )
 					$item_output .= '';
 				elseif( $depth === 1 )
-					$item_output .= '<a class="text-decoration-none"'. $attributes .'>';
-
+					$item_output .= '<a href="" class="text-decoration-none">';
 				else
-					$item_output .= '<a class="ampstart-nav-link"'. $attributes .'>';
+					$item_output .= '<a class="ampstart-nav-link">';
 
 				if( !$args->has_children){
 					$item_output .= $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after;
@@ -192,8 +170,5 @@
 				echo $fb_output;
 			}
 		}
-
-
-
 
 	}

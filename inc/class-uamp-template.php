@@ -163,7 +163,9 @@ class Ultimate_AMP_Template extends Ultimate_AMP_Abstract_Template {
 				break;
 			case is_page():
 				$template->get_template_part('page');
-
+				break;
+			case is_category():
+				$template->get_template_part('archive');
 				break;
 			case is_archive():
 				$template->get_template_part('archive');

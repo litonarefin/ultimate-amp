@@ -1,7 +1,8 @@
 <?php
 	global $post_id;
 	$uamp = new AMP_Post_Template($post_id);
-    $categories = get_the_category_list( _x( ', ', 'Used between list items, there is a space after the comma.', 'amp' ), '', $uamp->ID ); ?>
+    $categories = get_the_category_list( _x( ', ', 'Used between list items, there is a space after the comma.', 'amp' ), ''); 
+    ?>
 <?php if ( $categories ) : ?>
 		<?php printf( esc_html__( 'Categories: %s', 'amp' ), $categories ); ?>
 <?php endif; ?>

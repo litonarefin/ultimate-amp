@@ -1,1 +1,0 @@
-<h1 class="amphtml-title"><?php echo $this->title ?></h1>
