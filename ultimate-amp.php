@@ -499,15 +499,18 @@ define( 'AMP_QUERY', 'amp');
 
 			UltimateAmpAutoload::register();
 
+
 			//		if ( ! class_exists( 'ReduxFramework' ) && is_admin() ) {
-			if (!class_exists('ReduxFramework')) {
+			if ( ! class_exists( 'ReduxFramework' )) {
 				require_once UAMP_DIR . '/inc/admin/redux-core/framework.php';
 			}
 
 			// Register all the Main Options
-			require_once UAMP_DIR . '/inc/admin/admin-options.php';
+			require_once UAMP_DIR.'/inc/admin/admin-options.php';
 
 //			require_once UAMP_DIR . '/templates/template-one/functions.php';
+
+
 
 		}
 
