@@ -118,12 +118,8 @@
         if(is_page()){
 			$template = new Ultimate_Template_Loader();
 			return $template->get_template_part( 'template-parts/page' );
-//			require_once UAMP_DIR . '/templates/template-one/inc/page.php';
 
 		}
-//		require_once UAMP_DIR . '/templates/template-one/sidebar.php';
-
-
 	}
 
 	function uamp_template_home_loop(){
