@@ -1,8 +1,6 @@
 
 
-# Ultimate AMP WordPress Plugin [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)]
-(https://twitter.com/intent/tweet?text=Ultimate%20-%20AMP%20WordPress%20Plugin%20&url=https://wordpress
-.org/plugins/ultimate-amp/&hashtags=amp,wordpress amp, wp amp,google amp,amp,amp plugin, ultimate amp)
+# [Ultimate AMP WordPress Plugin](https://wordpress.org/plugins/ultimate-amp)
 
 [![Ultimate AMP - WordPress Plugin](https://jeweltheme.com/wp-content/uploads/2018/08/banner-1544x500.png)](https://wordpress.org/plugins/ultimate-amp/)
 
