@@ -1,7 +1,7 @@
 <?php
 /* Plugin Name: Ultimate AMP
  * Description: Ultimate Accelerated Mobile Pages WordPress Plugin
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: Liton Arefin
  * Author URI: https://jeweltheme.com/shop/ultimate-amp/
  * Tags: amp, wp amp, google amp, amp project
@@ -32,9 +32,17 @@ define( 'AMP_QUERY', 'amp');
 
 
 class Ultimate_AMP {
-    /*
-     * Ultimate AMP Constants
-     */
+
+
+	/*
+	 * Ultimate AMP Version Number
+	 */
+	public $version = '1.0.2';
+
+
+	/*
+	 * Ultimate AMP Constants
+	 */
 
     const AMP_QUERY    = 'amp';
 
@@ -43,12 +51,6 @@ class Ultimate_AMP {
      * Ultimate AMP name
      */
     public $plugin_name = 'Ultimate AMP';
-
-
-    /*
-     * Ultimate AMP Version Number
-     */
-    public $version = '1.0.0';
 
 
     /*
@@ -128,11 +130,6 @@ class Ultimate_AMP {
         //Footer Menu Class
         add_filter( 'nav_menu_link_attributes', [$this, 'uamp_add_menu_link_class'], 10, 3 );
         add_filter( 'nav_menu_css_class', [$this, 'uamp_menu_link_list_classes'], 1, 3);
-
-
-		//TGMPA Include AMP Plugin
-		require_once UAMP_DIR . '/lib/class-tgm-plugin-activation.php';
-		add_action( 'tgmpa_register', [ $this, 'uamp_register_required_plugins'] );
 
 
         if ( ! class_exists( 'ReduxFramework' ) ) {
@@ -472,30 +469,6 @@ class Ultimate_AMP {
 
     }
 
-
-    public function uamp_register_required_plugins() {
-		$plugins = array(
-			array(
-				'name'      => 'AMP for WordPress',
-				'slug'      => 'amp',
-				'required'  => true,
-			)
-		);
-		$config = array(
-			'id'           => 'uamp',                 // Unique ID for hashing notices for multiple instances of TGMPA.
-			'default_path' => '',                      // Default absolute path to bundled plugins.
-			'menu'         => 'uamp-install-plugin', // Menu slug.
-			'parent_slug'  => 'plugins.php',            // Parent menu slug.
-			'capability'   => 'manage_options',    // Capability needed to view plugin install page, should be a capability associated with the parent menu used.
-			'has_notices'  => true,                    // Show admin notices or not.
-			'dismissable'  => true,                    // If false, a user cannot dismiss the nag message.
-			'dismiss_msg'  => '',                      // If 'dismissable' is false, this message will be output at top of nag.
-			'is_automatic' => false,                   // Automatically activate plugins after installation or not.
-			'message'      => '',                      // Message to output right before the plugins table.
-		);
-
-		tgmpa( $plugins, $config );
-	}
 
 
 

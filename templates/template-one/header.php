@@ -22,7 +22,11 @@ $uamp = new AMP_Post_Template($post_id);
         <div role="button" aria-label="open sidebar" on="tap:header-sidebar.toggle" tabindex="0" class="ampstart-navbar-trigger  pr2  ">☰
         </div>
 
-        <?php if( $uamp_options['uamp_logo_type'] == "text" ){ ?>
+        <?php
+			$uamp_logo_width = $uamp_options['uamp_logo_width'];
+			$uamp_logo_height = $uamp_options['uamp_logo_height'];
+
+            if( $uamp_options['uamp_logo_type'] == "text" ){ ?>
 
             <a href="<?php echo esc_url( $uamp->get( 'home_url' ) ); ?>">
                 <span class="amp-site-title">
@@ -33,7 +37,11 @@ $uamp = new AMP_Post_Template($post_id);
         <?php } elseif( $uamp_options['uamp_logo_type'] == "image" ){?>
             <a class="logo" href="<?php echo esc_url( $uamp->get( 'home_url' ) ); ?>">
 				<?php if ( $uamp_options['uamp_logo_image']['url'] ) { ?>
-                    <amp-img src="<?php echo esc_url( $uamp_options['uamp_logo_image']['url'] ); ?>" width="32" height="32" layout="fixed" class="my0 mx-auto"></amp-img>
+                    <amp-img src="<?php echo esc_url( $uamp_options['uamp_logo_image']['url'] ); ?>"
+                             width="<?php echo $uamp_logo_width;?>"
+                             height="<?php echo $uamp_logo_height;?>"
+                             layout="fixed"
+                             class="my0 mx-auto"></amp-img>
 				<?php } ?>
             </a>
 
@@ -41,7 +49,12 @@ $uamp = new AMP_Post_Template($post_id);
 
             <a class="logo" href="<?php echo esc_url( $uamp->get( 'home_url' ) ); ?>">
 				<?php if ( $uamp_options['uamp_logo_image']['url'] ) { ?>
-                    <amp-img src="<?php echo esc_url( $uamp_options['uamp_logo_image']['url'] ); ?>" width="32" height="32" layout="fixed" class="my0 mx-auto"></amp-img>
+                    <amp-img
+                            src="<?php echo esc_url( $uamp_options['uamp_logo_image']['url'] ); ?>"
+                            width="<?php echo $uamp_logo_width;?>"
+                            height="<?php echo $uamp_logo_height;?>"
+                            layout="fixed"
+                            class="my0 mx-auto"></amp-img>
 				<?php } ?>
                 <span class="amp-site-title">
 				    <?php echo esc_html( $uamp_options['uamp_logo_text'] ); ?>

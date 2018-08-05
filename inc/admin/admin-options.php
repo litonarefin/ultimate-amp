@@ -249,7 +249,28 @@
 				'preview' => true,
 				"url" => true
 			),
-
+			array(
+				'id' => 'uamp_logo_width',
+				'type' => 'slider',
+				'title' => __('Logo Width', 'uamp'),
+				'subtitle' => __('Logo Width in Pixels', 'uamp'),
+				"default" => 32,
+				"min" => 32,
+				"step" => 1,
+				"max" => 200,
+				'resolution' => 1
+			),
+			array(
+				'id' => 'uamp_logo_height',
+				'type' => 'slider',
+				'title' => __('Logo Height', 'uamp'),
+				'subtitle' => __('Logo Height in Pixels', 'uamp'),
+				"default" => 32,
+				"min" => 32,
+				"step" => 1,
+				"max" => 90,
+				'resolution' => 1
+			)
 
 		)
 	) );
