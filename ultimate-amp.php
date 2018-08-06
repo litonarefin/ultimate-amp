@@ -134,9 +134,12 @@ class Ultimate_AMP {
         add_filter( 'nav_menu_link_attributes', [$this, 'uamp_add_menu_link_class'], 10, 3 );
         add_filter( 'nav_menu_css_class', [$this, 'uamp_menu_link_list_classes'], 1, 3);
 
+        // WP AMP Hooks
+	    add_filter( 'request', 'amp_force_query_var_value' );
+	    add_action( 'wp', 'amp_maybe_add_actions' );
 
 
-        if ( ! class_exists( 'ReduxFramework' ) ) {
+	    if ( ! class_exists( 'ReduxFramework' ) ) {
             // Redux Framework
             require_once UAMP_DIR . '/inc/admin/redux-core/framework.php';
             //Redux Options
