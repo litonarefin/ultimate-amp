@@ -135,9 +135,6 @@ class Ultimate_AMP {
         add_filter( 'nav_menu_css_class', [$this, 'uamp_menu_link_list_classes'], 1, 3);
 
 
-		//TGMPA Include AMP Plugin
-	    require_once UAMP_DIR . '/lib/class-tgm-plugin-activation.php';
-	    add_action( 'tgmpa_register', [ $this, 'uamp_register_required_plugins'] );
 
         if ( ! class_exists( 'ReduxFramework' ) ) {
             // Redux Framework
@@ -515,33 +512,6 @@ class Ultimate_AMP {
 		require_once AMP__DIR__ . '/back-compat/back-compat.php';
 		require_once AMP__DIR__ . '/includes/amp-helper-functions.php';
 		require_once AMP__DIR__ . '/includes/admin/functions.php';
-	}
-
-
-
-
-	public function uamp_register_required_plugins() {
-		$plugins = array(
-			array(
-				'name'      => 'AMP for WordPress',
-				'slug'      => 'amp',
-				'required'  => true,
-			)
-		);
-		$config = array(
-			'id'           => 'uamp',                 // Unique ID for hashing notices for multiple instances of TGMPA.
-			'default_path' => '',                      // Default absolute path to bundled plugins.
-			'menu'         => 'uamp-install-plugin', // Menu slug.
-			'parent_slug'  => 'plugins.php',            // Parent menu slug.
-			'capability'   => 'manage_options',    // Capability needed to view plugin install page, should be a capability associated with the parent menu used.
-			'has_notices'  => true,                    // Show admin notices or not.
-			'dismissable'  => true,                    // If false, a user cannot dismiss the nag message.
-			'dismiss_msg'  => '',                      // If 'dismissable' is false, this message will be output at top of nag.
-			'is_automatic' => false,                   // Automatically activate plugins after installation or not.
-			'message'      => '',                      // Message to output right before the plugins table.
-		);
-
-		tgmpa( $plugins, $config );
 	}
 
 
@@ -1145,4 +1115,62 @@ function ultimate_amp() {
 // Let's kick it
 ultimate_amp();
 
+
+
+// Activation Hook - Deactivate Other Plugins those will conflict with Ultimate AMP Plugin
+register_activation_hook( __FILE__, 'uamp_deactivate_ampbywp');
+register_activation_hook( __FILE__, 'uamp_deactivate_ampforwp');
+register_activation_hook( __FILE__, 'uamp_deactivate_better_amp');
+register_activation_hook( __FILE__, 'uamp_deactivate_wp_amp');
+
+// AMP by WP
+function uamp_deactivate_ampbywp(){
+	$dependent = 'amp/amp.php';
+	if( is_plugin_active($dependent) ){
+		add_action('update_option_active_plugins', 'uamp_deactivate_ampbywp_independent');
+	}
+}
+function uamp_deactivate_ampbywp_independent(){
+	$dependent = 'amp/amp.php';
+	deactivate_plugins($dependent);
+}
+
+
+// AMP for WP
+function uamp_deactivate_ampforwp(){
+	$dependent = 'accelerated-mobile-pages/accelerated-moblie-pages.php';
+	if( is_plugin_active($dependent) ){
+		add_action('update_option_active_plugins', 'uamp_deactivate_ampforwp_independent');
+	}
+}
+function uamp_deactivate_ampforwp_independent(){
+	$dependent = 'accelerated-mobile-pages/accelerated-moblie-pages.php';
+	deactivate_plugins($dependent);
+}
+
+
+// Better AMP
+function uamp_deactivate_better_amp(){
+	$dependent = 'better-amp/better-amp.php';
+	if( is_plugin_active($dependent) ){
+		add_action('update_option_active_plugins', 'uamp_deactivate_better_amp_independent');
+	}
+}
+function uamp_deactivate_better_amp_independent(){
+	$dependent = 'better-amp/better-amp.php';
+	deactivate_plugins($dependent);
+}
+
+
+// Better AMP
+function uamp_deactivate_wp_amp(){
+	$dependent = 'wp-amp/wp-amp.php';
+	if( is_plugin_active($dependent) ){
+		add_action('update_option_active_plugins', 'uamp_deactivate_wp_amp_independent');
+	}
+}
+function uamp_deactivate_wp_amp_independent(){
+	$dependent = 'wp-amp/wp-amp.php';
+	deactivate_plugins($dependent);
+}
 
