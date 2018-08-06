@@ -132,15 +132,13 @@ function amp_load_classes() {
 }
 
 function amp_add_frontend_actions() {
-	require_once AMP__DIR__ . '/includes/amp-frontend-actions.php';
+	require_once AMP__DIR__ . 'includes/amp-frontend-actions.php';
 }
 
 function amp_add_post_template_actions() {
-	require_once AMP__DIR__ . '/includes/amp-post-template-actions.php';
+	require_once AMP__DIR__ . 'includes/amp-post-template-actions.php';
 
-	print_r(AMP__DIR__ . '/includes/amp-post-template-actions.php');
-
-	require_once AMP__DIR__ . '/includes/amp-post-template-functions.php';
+	require_once AMP__DIR__ . 'includes/amp-post-template-functions.php';
 	amp_post_template_init_hooks();
 }
 

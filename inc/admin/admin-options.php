@@ -28,6 +28,7 @@
 		'google_api_key'       => '',
 		// Set it you want google fonts to update weekly. A google_api_key value is required.
 		'google_update_weekly' => false,
+		'show_options_object'   => false,
 		// Must be defined to add google fonts to the typography module
 		'async_typography'     => true,
 		// Use a asynchronous font on the front end or font string
@@ -120,25 +121,32 @@
 	);
 
 	// SOCIAL ICONS -> Setup custom links in the footer for quick links in your panel footer icons.
-	$args['uamp_icons'][] = array(
+	$args['share_icons'][] = array(
+		'url'   => 'https://wordpress.org/plugins/ultimate-amp/',
+		'title' => 'Visit on WordPress.org',
+		'icon'  => 'el el-wordpress'
+		//'img'   => '', // You can use icon OR img. IMG needs to be a full URL.
+	);
+	$args['share_icons'][] = array(
 		'url'   => 'https://github.com/litonarefin/ultimate-amp',
 		'title' => 'Visit us on GitHub',
 		'icon'  => 'el el-github'
 		//'img'   => '', // You can use icon OR img. IMG needs to be a full URL.
 	);
-	$args['uamp_icons'][] = array(
+	$args['share_icons'][] = array(
 		'url'   => 'https://www.facebook.com/jwthemeltd/',
 		'title' => 'Like us on Facebook',
 		'icon'  => 'el el-facebook'
 	);
-	$args['uamp_icons'][] = array(
+	$args['share_icons'][] = array(
 		'url'   => 'https://twitter.com/jwthemeltd',
 		'title' => 'Follow us on Twitter',
 		'icon'  => 'el el-twitter'
 	);
 
 	// Add content after the form.
-	$args['footer_text'] = __( '<p>This text is displayed below the options panel. It isn\'t required, but more info is always better! The footer_text field accepts all HTML.</p>', 'uamp' );
+	//$args['footer_text'] = __( '<p>This text is displayed below the options panel. It isn\'t required, but more
+	// info is always better! The footer_text field accepts all HTML.</p>', 'uamp' );
 
 	Redux::setArgs( $opt_name, $args );
 
