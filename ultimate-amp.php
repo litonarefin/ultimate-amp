@@ -103,50 +103,6 @@ class Ultimate_AMP {
     }
 
 
-	public function uamp_welcome_screen_page(){
-//		add_dashboard_page('Welcome', 'Welcome', 'read', 'ultimate-amp', [$this, 'uamp_welcome_page']);
-//		add_submenu_page( 'uamp_options', 'Welcome Page', 'My Custom Submenu Page', 'manage_options', [$this, 'uamp_welcome_page']);
-
-//		add_submenu_page( 'uamp_options', 'My Custom Page', 'My Custom Page', 'manage_options', 'welcome-page', [$this, 'uamp_welcome_page']);
-
-		add_submenu_page( 'themes.php', 'Settings page title', 'Settings menu label', 'manage_options', 'welcome-page',
-			array(&$this, 'uamp_welcome_page'));
-	}
-
-
-	public function uamp_welcome_page(){
-		echo '<h1>Welcome To my Awesome Plugin</h1>';
-		echo '<p>Here are some tips to get you started quickly.</p>';
-	}
-
-	public function uamp_welcome_redirect($plugin){
-		if($plugin=='ultimate-amp/ultimate-amp.php') {
-			wp_redirect(admin_url('admin.php?page==ultimate-amp'));
-//			wp_safe_redirect( add_query_arg( array( 'page' => 'uamp_options' ), admin_url( 'admin.php' ) ) );
-			die();
-		}
-	}
-
-	public function uamp_remove_menu_entry(){
-		remove_submenu_page( 'index.php', 'ultimate-amp' );
-	}
-
-	function ampforwp_add_welcome_pages($sections){
-
-
-		$sections[] = array(
-			'page_title'=> __('Welcome To AMPforWP plugin','accelerated-mobile-pages'),
-			'menu_title'=>__('Welcome to AMP','accelerated-mobile-pages'),
-			'page_permissions'=>'manage_options',
-			'menu_slug' => 'ampforwp-welcome-page',
-			'callback' => 'ampforwp_welcome_screen_content',
-			'custom_amp_menu'   => true
-		);
-		//array_splice($sections,10,0,$newsection);
-		return $sections;
-	}
-
-
 
     /*
      * Plugin Initialization
@@ -158,11 +114,9 @@ class Ultimate_AMP {
         add_action('plugins_loaded', [$this, 'uamp_bundle_core_files'],8);
 
         // Welcome Page
-	    add_filter('uamp_add_admin_subpages', [$this, 'ampforwp_add_welcome_pages']);
-
 	    add_action('admin_menu', [$this, 'uamp_welcome_screen_page'], 9);
 	    add_action('activated_plugin', [$this, 'uamp_welcome_redirect']);
-	    add_action( 'admin_head', [$this, 'uamp_remove_menu_entry'] );
+//	    add_action( 'admin_head', [$this, 'uamp_remove_menu_entry'] );
 
 
 	    // Image Size
@@ -570,6 +524,34 @@ class Ultimate_AMP {
 	}
 
 
+
+
+	public function uamp_welcome_screen_page(){
+		add_dashboard_page(
+			esc_html__('Welcome Ultimate AMP','uamp'),
+			esc_html__('Welcome to Ultimate AMP','uamp'),
+			'read',
+			'uamp-welcome-page',
+			[$this, 'uamp_welcome_page']
+		);
+	}
+
+
+	public function uamp_welcome_page(){
+		require_once UAMP_DIR . '/inc/Welcome.php';
+
+	}
+
+	public function uamp_welcome_redirect($plugin){
+		if($plugin=='ultimate-amp/ultimate-amp.php') {
+			wp_redirect(admin_url('admin.php?page=uamp-welcome-page'));
+			die();
+		}
+	}
+
+	public function uamp_remove_menu_entry(){
+		remove_submenu_page( 'index.php', 'uamp-welcome-page' );
+	}
 
 
 

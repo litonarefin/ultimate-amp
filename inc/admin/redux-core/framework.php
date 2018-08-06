@@ -481,7 +481,7 @@
                     'page_parent'               => 'themes.php',
                     // requires menu_type = 'submenu
                     'page_priority'             => null,
-                    'allow_sub_menu'            => false,
+                    'allow_sub_menu'            => true,
                     // allow submenus to be added if menu_type == menu
                     'save_defaults'             => true,
                     // Save defaults to the DB on it if empty
