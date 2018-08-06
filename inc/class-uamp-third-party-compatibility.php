@@ -10,4 +10,9 @@
 
 	class ThirdPartyCompatibility {
 
+		public function __construct() {
+
+		}
+
+
 	}

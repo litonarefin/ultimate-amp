@@ -95,15 +95,18 @@ class Ultimate_AMP_Template extends Ultimate_AMP_Abstract_Template {
 
 		$template = new Ultimate_Template_Loader();
 
-		$active_plugins = (array) get_option( 'active_plugins', array() );
-		if ( ! empty( $active_plugins ) && in_array( 'amp/amp.php', $active_plugins ) ) {
+
+//		$active_plugins = (array) get_option( 'active_plugins', array() );
+//		if ( !empty( $active_plugins ) && in_array( 'amp/amp.php', $active_plugins ) ) {
 
 			// Ultimate AMP Autoload Class
 			require_once UAMP_DIR . '/inc/class-uamp-autoload.php';
 			UltimateAmpAutoload::register();
-		} else {
-			echo esc_html( 'AMP for WordPress is Required to see AMP Version of your Website. Please Install AMP for WordPress Plugin from your Dashboard', 'uamp' );
-		}
+
+//
+//		} else {
+//			echo esc_html( 'Please Activate Default AMP for WordPress Plugin.', 'uamp' );
+//		}
 
 
 		if ( $is_loaded ) {

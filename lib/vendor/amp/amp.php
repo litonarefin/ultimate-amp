@@ -1,133 +1,10 @@
 <?php
-/**
- * Plugin Name: AMP
- * Description: Add AMP support to your WordPress site.
- * Plugin URI: https://github.com/automattic/amp-wp
- * Author: WordPress.com VIP, XWP, Google, and contributors
- * Author URI: https://github.com/Automattic/amp-wp/graphs/contributors
- * Version: 0.7.2
- * Text Domain: amp
- * Domain Path: /languages/
- * License: GPLv2 or later
- *
- * @package AMP
- */
-
-/**
- * Print admin notice regarding having an old version of PHP.
- *
- * @since 0.7
- */
-function _amp_print_php_version_admin_notice() {
-	?>
-	<div class="notice notice-error">
-			<p><?php esc_html_e( 'The AMP plugin requires PHP 5.3+. Please contact your host to update your PHP version.', 'amp' ); ?></p>
-		</div>
-	<?php
-}
-if ( version_compare( phpversion(), '5.3', '<' ) ) {
-	add_action( 'admin_notices', '_amp_print_php_version_admin_notice' );
-	return;
-}
-
-define( 'AMP__FILE__', __FILE__ );
-define( 'AMP__DIR__', dirname( __FILE__ ) );
-define( 'AMP__VERSION', '0.7.2' );
-
-require_once AMP__DIR__ . '/includes/class-amp-autoloader.php';
-AMP_Autoloader::register();
-
-require_once AMP__DIR__ . '/back-compat/back-compat.php';
-require_once AMP__DIR__ . '/includes/amp-helper-functions.php';
-require_once AMP__DIR__ . '/includes/admin/functions.php';
-
-register_activation_hook( __FILE__, 'amp_activate' );
-function amp_activate() {
-	amp_after_setup_theme();
-	if ( ! did_action( 'amp_init' ) ) {
-		amp_init();
-	}
-	flush_rewrite_rules();
-}
-
-register_deactivation_hook( __FILE__, 'amp_deactivate' );
-function amp_deactivate() {
-	// We need to manually remove the amp endpoint
-	global $wp_rewrite;
-	foreach ( $wp_rewrite->endpoints as $index => $endpoint ) {
-		if ( amp_get_slug() === $endpoint[1] ) {
-			unset( $wp_rewrite->endpoints[ $index ] );
-			break;
-		}
-	}
-
-	flush_rewrite_rules();
-}
-
-/*
- * Register AMP scripts regardless of whether AMP is enabled or it is the AMP endpoint
- * for the sake of being able to use AMP components on non-AMP documents ("dirty AMP").
- */
-add_action( 'wp_default_scripts', 'amp_register_default_scripts' );
-
-// Ensure async and custom-element/custom-template attributes are present on script tags.
-add_filter( 'script_loader_tag', 'amp_filter_script_loader_tag', PHP_INT_MAX, 2 );
-
-/**
- * Set up AMP.
- *
- * This function must be invoked through the 'after_setup_theme' action to allow
- * the AMP setting to declare the post types support earlier than plugins/theme.
- *
- * @since 0.6
- */
-function amp_after_setup_theme() {
-	amp_get_slug(); // Ensure AMP_QUERY_VAR is set.
-
-	if ( false === apply_filters( 'amp_is_enabled', true ) ) {
-		return;
-	}
-
-	add_action( 'init', 'amp_init', 0 ); // Must be 0 because widgets_init happens at init priority 1.
-}
-add_action( 'after_setup_theme', 'amp_after_setup_theme', 5 );
-
-/**
- * Init AMP.
- *
- * @since 0.1
- */
-function amp_init() {
-
-	/**
-	 * Triggers on init when AMP plugin is active.
-	 *
-	 * @since 0.3
-	 */
-	do_action( 'amp_init' );
-
-	load_plugin_textdomain( 'amp', false, plugin_basename( AMP__DIR__ ) . '/languages' );
-
-	add_rewrite_endpoint( amp_get_slug(), EP_PERMALINK );
-
-	AMP_Theme_Support::init();
-	AMP_Post_Type_Support::add_post_type_support();
-	add_filter( 'request', 'amp_force_query_var_value' );
-	add_action( 'admin_init', 'AMP_Options_Manager::register_settings' );
-	add_action( 'wp_loaded', 'amp_post_meta_box' );
-	add_action( 'wp_loaded', 'amp_add_options_menu' );
-	add_action( 'parse_query', 'amp_correct_query_when_is_front_page' );
-
-	// Redirect the old url of amp page to the updated url.
-	add_filter( 'old_slug_redirect_url', 'amp_redirect_old_slug_to_new_url' );
-
-	if ( class_exists( 'Jetpack' ) && ! ( defined( 'IS_WPCOM' ) && IS_WPCOM ) && version_compare( JETPACK__VERSION, '6.2-alpha', '<' ) ) {
-		require_once AMP__DIR__ . '/jetpack-helper.php';
-	}
-
-	// Add actions for legacy post templates.
-	add_action( 'wp', 'amp_maybe_add_actions' );
-}
+////AMP
+//add_rewrite_endpoint( AMP_QUERY_VAR, EP_PERMALINK );
+//add_post_type_support( 'post', AMP_QUERY_VAR );
+//add_filter( 'request', 'amp_force_query_var_value' );
+//add_action( 'wp', 'amp_maybe_add_actions' );
+//
 
 // Make sure the `amp` query var has an explicit value.
 // Avoids issues when filtering the deprecated `query_string` hook.
@@ -149,6 +26,7 @@ function amp_force_query_var_value( $query_vars ) {
  * @return void
  */
 function amp_maybe_add_actions() {
+
 
 	// Short-circuit when theme supports AMP, as everything is handled by AMP_Theme_Support.
 	if ( current_theme_supports( 'amp' ) ) {
@@ -259,6 +137,9 @@ function amp_add_frontend_actions() {
 
 function amp_add_post_template_actions() {
 	require_once AMP__DIR__ . '/includes/amp-post-template-actions.php';
+
+	print_r(AMP__DIR__ . '/includes/amp-post-template-actions.php');
+
 	require_once AMP__DIR__ . '/includes/amp-post-template-functions.php';
 	amp_post_template_init_hooks();
 }
@@ -309,18 +190,10 @@ function amp_render_post( $post ) {
 		$wp_query->query_vars[ amp_get_slug() ] = true;
 	}
 
-	// Prevent New Relic from causing invalid AMP responses due the NREUM script it injects after the meta charset.
 	if ( extension_loaded( 'newrelic' ) ) {
 		newrelic_disable_autorum();
 	}
 
-	/**
-	 * Fires before rendering a post in AMP.
-	 *
-	 * @since 0.2
-	 *
-	 * @param int $post_id Post ID.
-	 */
 	do_action( 'pre_amp_render_post', $post_id );
 
 	amp_add_post_template_actions();
@@ -332,21 +205,12 @@ function amp_render_post( $post ) {
 	}
 }
 
-/**
- * Bootstraps the AMP customizer.
- *
- * Uses the priority of 12 for the 'after_setup_theme' action.
- * Many themes run `add_theme_support()` on the 'after_setup_theme' hook, at the default priority of 10.
- * And that function's documentation suggests adding it to that action.
- * So this enables themes to `add_theme_support( 'amp' )`.
- * And `amp_init_customizer()` will be able to recognize theme support by calling `amp_is_canonical()`.
- *
- * @since 0.4
- */
+
 function _amp_bootstrap_customizer() {
 	add_action( 'after_setup_theme', 'amp_init_customizer', 12 );
 }
 add_action( 'plugins_loaded', '_amp_bootstrap_customizer', 9 ); // Should be hooked before priority 10 on 'plugins_loaded' to properly unhook core panels.
+
 
 /**
  * Redirects the old AMP URL to the new AMP URL.

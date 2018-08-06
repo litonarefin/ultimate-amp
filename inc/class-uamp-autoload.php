@@ -25,7 +25,7 @@ class UltimateAmpAutoload {
 	 * @example Format (note no leading / and no .php extension):
 	 *
 	 *  array(
-	 *      'Class_Name1' =>  'subdir-of-inc/amp/includes/filename1',
+	 *      'Class_Name1' =>  'subdir-of-inc/amp/lib/vendor/amp/includes/filename1',
 	 *      'Class_Name2' =>  '2nd-subdir-of-inc/amp/includes/filename2',
 	 *  );
 	 *
@@ -39,7 +39,10 @@ class UltimateAmpAutoload {
 		'Ultimate_AMP_Sanitize'              		  => 'inc/class-uamp-sanitize',
 		'Ultimate_AMP_Shortcode'              		  => 'inc/class-uamp-shortcodes',
 		'FastImage'              					  => 'lib/Fastimage',
-		'UAMP_Nav_Menu_Walker'                        => 'inc/menu-walker'
+		'UAMP_Nav_Menu_Walker'                        => 'inc/menu-walker',
+		'ThirdPartyCompatibility'                     => 'inc/class-uamp-third-party-compatibility',
+
+
 	);
 
 	/**

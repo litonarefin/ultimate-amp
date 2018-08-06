@@ -111,6 +111,7 @@ class Ultimate_AMP {
 
         //Localization Initialize
         add_action('plugins_loaded', [$this, 'localization_init']);
+        add_action('plugins_loaded', [$this, 'uamp_bundle_core_files'],8);
 
         // Image Size
         $uamp_width         = get_option( 'uamp_content_width' );
@@ -127,10 +128,16 @@ class Ultimate_AMP {
         add_action( 'init', array( $this, 'uamp_register_menus'));
         add_action( 'uamp_init',[ $this, 'uamp_auto_add_amp_menu_link_insert'],9999);
 
+
+
         //Footer Menu Class
         add_filter( 'nav_menu_link_attributes', [$this, 'uamp_add_menu_link_class'], 10, 3 );
         add_filter( 'nav_menu_css_class', [$this, 'uamp_menu_link_list_classes'], 1, 3);
 
+
+		//TGMPA Include AMP Plugin
+	    require_once UAMP_DIR . '/lib/class-tgm-plugin-activation.php';
+	    add_action( 'tgmpa_register', [ $this, 'uamp_register_required_plugins'] );
 
         if ( ! class_exists( 'ReduxFramework' ) ) {
             // Redux Framework
@@ -176,9 +183,6 @@ class Ultimate_AMP {
         register_deactivation_hook(__FILE__, [$this, 'uamp_deactivate']);
 
 
-        // Default AMP Plugin
-
-
         // Redirect the old url of amp page to the updated url.
         add_filter('old_slug_redirect_url', [$this, 'amp_redirect_old_slug_to_new_url']);
 
@@ -192,6 +196,26 @@ class Ultimate_AMP {
         if ( is_admin() ) {
             $this->uamp_admin_init();
         }
+
+
+
+
+
+	    // Default AMP Plugin
+
+	    if ( false === apply_filters( 'amp_is_enabled', true ) ) {
+		    return;
+	    }
+	    if( ! defined('AMP_QUERY_VAR')){
+		    define( 'AMP_QUERY_VAR', apply_filters( 'amp_query_var', 'amp' ) );
+	    }
+
+	    if ( ! defined('AMP__DIR__') ) {
+		    define( 'AMP__DIR__', UAMP_DIR . '/lib/vendor/amp/' );
+	    }
+
+
+
 
     }
 
@@ -465,9 +489,60 @@ class Ultimate_AMP {
 
 		// Ultimate AMP Autoload Class
 		require_once UAMP_DIR . '/inc/class-uamp-autoload.php';
-		UltimateAmpAutoload::register();
+	    UltimateAmpAutoload::register();
+
 
     }
+
+
+	public function uamp_bundle_core_files(){
+
+		require_once UAMP_DIR .'/lib/vendor/amp/amp.php';
+
+		define( 'AMP__FILE__', __FILE__ );
+		if ( ! defined('AMP__DIR__') ) {
+			define( 'AMP__DIR__', plugin_dir_path(__FILE__) . 'lib/vendor/amp/' );
+		}
+		if ( ! defined('AMP_QUERY_VAR') ){
+			define('AMP_QUERY_VAR', 'amp');
+		}
+
+		define( 'AMP__VERSION', '0.7.2' );
+
+		require_once AMP__DIR__ . '/includes/class-amp-autoloader.php';
+		AMP_Autoloader::register();
+
+		require_once AMP__DIR__ . '/back-compat/back-compat.php';
+		require_once AMP__DIR__ . '/includes/amp-helper-functions.php';
+		require_once AMP__DIR__ . '/includes/admin/functions.php';
+	}
+
+
+
+
+	public function uamp_register_required_plugins() {
+		$plugins = array(
+			array(
+				'name'      => 'AMP for WordPress',
+				'slug'      => 'amp',
+				'required'  => true,
+			)
+		);
+		$config = array(
+			'id'           => 'uamp',                 // Unique ID for hashing notices for multiple instances of TGMPA.
+			'default_path' => '',                      // Default absolute path to bundled plugins.
+			'menu'         => 'uamp-install-plugin', // Menu slug.
+			'parent_slug'  => 'plugins.php',            // Parent menu slug.
+			'capability'   => 'manage_options',    // Capability needed to view plugin install page, should be a capability associated with the parent menu used.
+			'has_notices'  => true,                    // Show admin notices or not.
+			'dismissable'  => true,                    // If false, a user cannot dismiss the nag message.
+			'dismiss_msg'  => '',                      // If 'dismissable' is false, this message will be output at top of nag.
+			'is_automatic' => false,                   // Automatically activate plugins after installation or not.
+			'message'      => '',                      // Message to output right before the plugins table.
+		);
+
+		tgmpa( $plugins, $config );
+	}
 
 
 
@@ -1056,9 +1131,6 @@ class Ultimate_AMP {
     }
 
 
-
-
-
 }
 
 
@@ -1072,3 +1144,5 @@ function ultimate_amp() {
 
 // Let's kick it
 ultimate_amp();
+
+

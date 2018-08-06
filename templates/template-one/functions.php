@@ -5,6 +5,7 @@
 	// 	return 'active';
 	// }
 
+
     //Add Actions and Filters
 	add_action('uamp/template/head', 'uamp_template_enqueue_scripts');
 	add_action('uamp/template/header', 'uamp_template_header');
@@ -84,7 +85,8 @@
 
 
 	function uamp_custom_css(){
-		
+		require_once UAMP_DIR . '/lib/vendor/amp/includes/templates/class-amp-post-template.php';
+
         global $post_id;
 		$uamp = new AMP_Post_Template($post_id);
 		?>
@@ -95,7 +97,9 @@
 	<?php }
 
 	function uamp_template_post_featured_image(){
-        global $post_id;
+		require_once UAMP_DIR . '/lib/vendor/amp/includes/templates/class-amp-post-template.php';
+
+		global $post_id;
 		$uamp = new AMP_Post_Template($post_id);
         if(is_single() || is_page()){
 			$uamp->load_parts(array('featured-image'));
@@ -106,7 +110,9 @@
     }
 
 	function uamp_template_header(){
-        global $post_id;
+		require_once UAMP_DIR . '/lib/vendor/amp/includes/templates/class-amp-post-template.php';
+
+		global $post_id;
 		require_once UAMP_DIR .'/templates/template-one/header.php';
         $uamp = new AMP_Post_Template($post_id);
     }

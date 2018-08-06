@@ -18,7 +18,8 @@
         <div class="redux-action_bar">
             <span class="spinner"></span>
             <?php if ( false === $this->parent->args['hide_save'] ) { ?>
-                <?php submit_button( esc_attr__( 'Save Changes', 'redux-framework' ), 'primary', 'redux_save', false ); ?>
+                <?php submit_button( esc_attr__( 'Save Changes', 'redux-framework' ), 'primary', 'redux_save', false )
+                ; ?>
             <?php } ?>
             
             <?php if ( false === $this->parent->args['hide_reset'] ) { ?>
