@@ -1,7 +1,7 @@
 <?php
 /* Plugin Name: Ultimate AMP
  * Description: Ultimate Accelerated Mobile Pages WordPress Plugin
- * Version: 1.0.2
+ * Version: 1.0.21
  * Author: Liton Arefin
  * Author URI: https://jeweltheme.com/shop/ultimate-amp/
  * Tags: amp, wp amp, google amp, amp project
@@ -37,7 +37,7 @@ class Ultimate_AMP {
 	/*
 	 * Ultimate AMP Version Number
 	 */
-	public $version = '1.0.2';
+	public $version = '1.0.21';
 
 
 	/*
