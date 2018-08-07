@@ -4,8 +4,6 @@
 	// } else {
 	// 	return 'active';
 	// }
-
-
     //Add Actions and Filters
 	add_action('uamp/template/head', 'uamp_template_enqueue_scripts');
 	add_action('uamp/template/header', 'uamp_template_header');
@@ -24,6 +22,7 @@
 
 
 	add_action('uamp/template/head', 'uamp_head_scripts',10,1);
+//	add_action('uamp/template/head', 'amp_post_template_add_canonicals',1);
 	add_action('amp_post_template_head', 'uamp_custom_css');
 
 	add_action('uamp/template/head', 'uamp_custom_normalize_css',10,2);
@@ -35,6 +34,18 @@
 	remove_action( 'amp_post_template_head', 'amp_add_generator_metadata' );
 
 
+
+
+	function amp_post_template_add_canonicals(){
+		require_once UAMP_DIR . '/lib/vendor/amp/includes/templates/class-amp-post-template.php';
+		echo "Liton";
+
+		$uamp = new AMP_Post_Template();
+	    print_r($uamp->get('document_title'));
+
+		echo esc_html( $uamp->get( 'document_title' ) );
+
+    }
 
     function uamp_template_enqueue_scripts(){
         do_action('uamp/template/enqueue-scripts');

@@ -7,7 +7,6 @@ $uamp = new AMP_Post_Template($post_id);
 <head>
     <meta charset="utf-8">
     <link rel="dns-prefetch" href="https://cdn.ampproject.org">
-    <link rel="canonical" href="https://ultimate-amp.app/amp/">
     <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1,initial-scale=1">
     <link rel="shortcut icon" href="<?php echo esc_url( $uamp_options['uamp_favicon']['url'] ); ?>"/>
 
