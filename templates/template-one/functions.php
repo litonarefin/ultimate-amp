@@ -64,6 +64,7 @@
     }
 
 	function uamp_head_scripts() { ?>
+
         <script async src="https://cdn.ampproject.org/v0.js"></script>
 
         <style amp-boilerplate="">body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate="">body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
@@ -85,8 +86,6 @@
 
 
 	function uamp_custom_css(){
-		require_once UAMP_DIR . '/lib/vendor/amp/includes/templates/class-amp-post-template.php';
-
         global $post_id;
 		$uamp = new AMP_Post_Template($post_id);
 		?>
@@ -97,8 +96,6 @@
 	<?php }
 
 	function uamp_template_post_featured_image(){
-		require_once UAMP_DIR . '/lib/vendor/amp/includes/templates/class-amp-post-template.php';
-
 		global $post_id;
 		$uamp = new AMP_Post_Template($post_id);
         if(is_single() || is_page()){
@@ -110,8 +107,6 @@
     }
 
 	function uamp_template_header(){
-		require_once UAMP_DIR . '/lib/vendor/amp/includes/templates/class-amp-post-template.php';
-
 		global $post_id;
 		require_once UAMP_DIR .'/templates/template-one/header.php';
         $uamp = new AMP_Post_Template($post_id);

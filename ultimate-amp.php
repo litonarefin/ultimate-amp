@@ -116,7 +116,6 @@ class Ultimate_AMP {
         // Welcome Page
 	    add_action('admin_menu', [$this, 'uamp_welcome_screen_page'], 9);
 	    add_action('activated_plugin', [$this, 'uamp_welcome_redirect']);
-//	    add_action( 'admin_head', [$this, 'uamp_remove_menu_entry'] );
 
 
 	    // Image Size
