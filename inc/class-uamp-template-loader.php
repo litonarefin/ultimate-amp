@@ -87,7 +87,7 @@
 			switch ( $is_loaded == "enable" ) {
 
 				case is_front_page() && is_home():
-					$this->load_parts(array( 'front-page'));
+					$this->load_parts(array( 'home'));
 					break;
 
 				case is_front_page():

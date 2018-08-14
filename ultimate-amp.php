@@ -950,7 +950,7 @@ class Ultimate_AMP {
     }
 
 
-	public function is_home_posts_page() {
+	public static function is_home_posts_page() {
 		return ( is_home() && 'posts' == get_option( 'show_on_front' ) );
 	}
 
@@ -960,7 +960,7 @@ class Ultimate_AMP {
 	}
 
 
-	public function is_posts_page() {
+	public static function is_posts_page() {
 		return ( is_home() && 'page' == get_option( 'show_on_front' ) );
 	}
 
