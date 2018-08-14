@@ -1,7 +1,7 @@
 <?php
 /* Plugin Name: Ultimate AMP
  * Description: Ultimate Accelerated Mobile Pages WordPress Plugin
- * Version: 1.0.21
+ * Version: 1.0.211
  * Author: Liton Arefin
  * Author URI: https://jeweltheme.com/shop/ultimate-amp/
  * Tags: amp, wp amp, google amp, amp project
@@ -104,10 +104,76 @@ class Ultimate_AMP {
 
 
 
+	public function pre_get_posts( WP_Query $query  ) {
+    	//global $query;
+//$query = Ultimate_Template_Loader();
+
+//    	print_r($query);
+
+		$is_front_page_query = (
+			$query->is_main_query()
+			&&
+			$query->is_home()
+			&&
+			// Is AMP endpoint.
+			false !== $query->get( amp_get_slug(), false )
+			&&
+			// Is query not yet fixed uo up to be front page.
+			! $query->is_front_page()
+			&&
+			// Is showing pages on front.
+			'page' === get_option( 'show_on_front' )
+			&&
+			// Has page on front set.
+			get_option( 'page_on_front' )
+			&&
+			// See line in WP_Query::parse_query() at <https://github.com/WordPress/wordpress-develop/blob/0baa8ae/src/wp-includes/class-wp-query.php#L961>.
+			0 === count( array_diff( array_keys( wp_parse_args( $query->query ) ), array( amp_get_slug(), 'preview', 'page', 'paged', 'cpage' ) ) )
+		);
+
+
+		if ( $is_front_page_query ) {
+			$query->is_home     = true;
+			$query->is_page     = true;
+			$query->is_singular = true;
+			$query->set( 'page_id', get_option( 'page_on_front' ) );
+		}
+
+
+
+		if ( ! $q->is_main_query() ) {
+			return '';
+		}
+
+//		if ( $this->is_amp() && $q->is_home() && 'page' === get_option( 'show_on_front' ) && absint( get_option( 'page_on_front' ) ) === wc_get_page_id( 'shop' ) && ! isset( $q->query['pagename'] ) ) {
+//
+//			$q->is_page              = true;
+//			$q->is_home              = false;
+//			$q->is_post_type_archive = true;
+//			$q->set( 'post_type', 'product' );
+//
+//			global $wp_post_types;
+//
+//			$shop_page = get_post( wc_get_page_id( 'shop' ) );
+//
+//			$wp_post_types['product']->ID         = '';
+//			$wp_post_types['product']->post_title = $shop_page->post_title;
+//			$wp_post_types['product']->post_name  = $shop_page->post_name;
+//			$wp_post_types['product']->post_type  = $shop_page->post_type;
+//			$wp_post_types['product']->ancestors  = get_ancestors( $shop_page->ID, $shop_page->post_type );
+//		}
+
+
+//		$print_r('Liton Arefin');
+	}
+
+
+
     /*
      * Plugin Initialization
      */
     public function uamp_plugin_init() {
+//	    add_action( 'pre_get_posts', [ $this, 'pre_get_posts' ], 9 );
 
         //Localization Initialize
         add_action('plugins_loaded', [$this, 'localization_init']);
@@ -132,7 +198,6 @@ class Ultimate_AMP {
         add_action( 'init', [ $this, 'uamp_init' ], 99 );
         add_action( 'init', array( $this, 'uamp_register_menus'));
         add_action( 'uamp_init',[ $this, 'uamp_auto_add_amp_menu_link_insert'],9999);
-
 
 
         //Footer Menu Class
@@ -967,15 +1032,21 @@ class Ultimate_AMP {
 //			$allowed_pages = is_array( $this->options->get( 'archives' ) ) ? $this->options->get( 'archives' ) : array ();
 //			if ( is_archive() && false == $this->is_allowed_page( $allowed_pages ) || ! is_archive() && $id && $this->is_excluded_post( $id ) || $this->is_excluded_posts_page() && $wp_query->is_home() || is_search() && false == $this->is_allowed_page( $allowed_pages ) ) {
 
-        if ( is_archive() ) {
-            $is_excluded = true;
-        }
+//        if ( is_archive() ) {
+//            $is_excluded = true;
+//        }
 
         return $is_excluded;
     }
 
+
+
     public function is_excluded_posts_page() {
-        $allowed_pages = is_array( $this->options->get( 'archives' ) ) ? $this->options->get( 'archives' ) : array ();
+	    global $uamp_options;
+	    $archives = $uamp_options['archives'];
+	    $allowed_pages = is_array( $archives ) ? $archives : array ();
+
+//        $allowed_pages = is_array( $this->options->get( 'archives' ) ) ? $this->options->get( 'archives' ) : array ();
 
         return 'posts' == get_option( 'show_on_front' ) && ! array_search( 'show_on_front', $allowed_pages );
     }
@@ -986,6 +1057,19 @@ class Ultimate_AMP {
 
         return apply_filters( 'uamp_is_excluded_post', $is_excluded, $id );
     }
+
+
+	public function is_home_posts_page() {
+		return ( is_home() && 'posts' == get_option( 'show_on_front' ) );
+	}
+
+	public static function is_home_static_page() {
+		return ( 'page' == get_option( 'show_on_front' ) && get_option( 'page_on_front' ) && is_page( get_option( 'page_on_front' ) ) );
+	}
+
+	public function is_posts_page() {
+		return ( is_home() && 'page' == get_option( 'show_on_front' ) );
+	}
 
     public function get_queried_object_id() {
         global $wp_query, $wp;
@@ -1001,44 +1085,58 @@ class Ultimate_AMP {
         }
 
         return $queried_object_id;
+
     }
 
 
-    public function uamp_load_template() {
-        global $wp;
+
+
+	public function amp_add_post_template_actions() {
+
+		include_once( 'templates/template-one/functions.php' );
+
+		uamp_post_template_init_hooks();
+	}
+
+
+
+
+    public function uamp_load_template($post) {
+        global $wp, $uamp_options;
 
         $queried_object_id = $this->get_queried_object_id();
+
+
+	    $li = new Ultimate_AMP();
+//	    print_r($li->is_home_static_page());
+//	    print_r($li->is_posts_page());
+
+	    print_r($queried_object_id);
 
         do_action( 'before_uamp_load_template', $queried_object_id );
 
         $redirect_url = $this->uamp_get_redirect_url( $wp, $queried_object_id );
+//	    print_r($redirect_url);
+
         if ( $redirect_url ) {
             wp_redirect( $redirect_url );
             exit();
         }
 
-        include_once( 'inc/class-uamp-template.php' );
 
-        $this->template = new Ultimate_AMP_Template( $this->options );
+        if ( $this->is_amp() && $uamp_options['uamp_is_amp'] == "enable") {
 
-        new Ultimate_AMP_Shortcode( $this->template );
-            global $uamp_options;
-            if ( $this->is_amp() && $uamp_options['uamp_is_amp'] == "enable") {
+            $this->amp_add_post_template_actions();
 
-            $this->template->load();
+	        $template = new Ultimate_Template_Loader( $post_id );
 
-            $this->template = apply_filters( 'after_uamp_load_template', $this->template );
+            apply_filters( 'after_uamp_load_template', $template );
 
-            do_action( 'before_uamp_load_template', $this->template );
-
-            echo $this->template->render();
+	        do_action( 'before_uamp_load_template', $template );
 
 
             exit();
         }
-
-
-
 
 
     }

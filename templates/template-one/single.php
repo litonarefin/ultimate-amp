@@ -1,15 +1,15 @@
 <?php do_action('uamp/template/start'); ?>
 
-<?php do_action('uamp/template/header'); ?>
+<?php $this->load_parts(array('header')); ?>
 
 <?php do_action('uamp/template/sidebar'); ?>
 
 <?php do_action('uamp_post_before_loop'); ?>
 
-<?php do_action('uamp/template/post'); ?>
+<?php $this->load_parts(array('single-post')); ?>
 
 <?php do_action('uamp_post_after_loop'); ?>
 
-<?php do_action('uamp/template/footer'); ?>
+<?php $this->load_parts(array('footer')); ?>
 
 <?php do_action('uamp/template/end'); ?>

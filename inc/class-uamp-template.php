@@ -79,83 +79,13 @@ class Ultimate_AMP_Template extends Ultimate_AMP_Abstract_Template {
 
 
 	public function load() {
-		global $post_id;
 
-		$social_share_script = array (
-			'slug' => 'amp-social-share',
-			'src'  => 'https://cdn.ampproject.org/v0/amp-social-share-0.1.js'
-		);
-		$social_like_script  = array (
-			'slug' => 'amp-facebook-like',
-			'src'  => 'https://cdn.ampproject.org/v0/amp-facebook-like-0.1.js'
-		);
+		new Ultimate_Template_Loader($post);
 
-
-		$is_loaded = apply_filters( 'uamp_template_head', false, $this );
-
-		$template = new Ultimate_Template_Loader();
-
-
-//		$active_plugins = (array) get_option( 'active_plugins', array() );
-//		if ( !empty( $active_plugins ) && in_array( 'amp/amp.php', $active_plugins ) ) {
-
-			// Ultimate AMP Autoload Class
-			require_once UAMP_DIR . '/inc/class-uamp-autoload.php';
-			UltimateAmpAutoload::register();
-
-//
-//		} else {
-//			echo esc_html( 'Please Activate Default AMP for WordPress Plugin.', 'uamp' );
-//		}
-
-
-		if ( $is_loaded ) {
-			return $template;
-		}
-
-
-		switch ( $is_loaded = true ) {
-
-			case is_front_page() && is_home():
-				$template->get_template_part('front-page');
-				break;
-
-			case is_front_page():
-				$template->get_template_part('front-page');
-				break;
-
-			case is_home():
-				$template->get_template_part('home');
-				break;
-
-			case is_single():
-				$template->get_template_part('single');
-				break;
-
-			case is_page():
-				$template->get_template_part('page');
-				break;
-
-			case is_category():
-				$template->get_template_part('archive');
-				break;
-
-//			case is_archive():
-//				$template->get_template_part('archive');
-//				break;
-
-			case is_404():
-				$template->get_template_part('404');
-				break;
-
-			case is_search():
-				$template->get_template_part('search');
-				break;
-		}
 	}
 
 
-	public function set_post( $id, $set_meta = true ) {
+	public static function set_post( $id, $set_meta = true ) {
 		// Image gallery just for single post
 		add_shortcode( 'gallery', array ( $this, 'gallery_shortcode' ) );
 

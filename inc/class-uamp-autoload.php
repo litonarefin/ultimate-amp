@@ -41,7 +41,8 @@ class UltimateAmpAutoload {
 		'FastImage'              					  => 'lib/Fastimage',
 		'UAMP_Nav_Menu_Walker'                        => 'inc/menu-walker',
 		'ThirdPartyCompatibility'                     => 'inc/class-uamp-third-party-compatibility',
-
+		'Ultimate_Template_Loader'                    => 'inc/class-uamp-template-loader',
+		'Ultimate_AMP_Load_Template_Files'                    => 'inc/class-uamp-extend-lib-template-loader',
 
 	);
 

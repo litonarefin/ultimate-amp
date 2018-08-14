@@ -54,7 +54,7 @@ class AMP_Post_Template {
 	 * @since 0.2
 	 * @var string
 	 */
-	private $template_dir;
+	protected $template_dir;
 
 	/**
 	 * Post template data.
@@ -62,7 +62,7 @@ class AMP_Post_Template {
 	 * @since 0.2
 	 * @var array
 	 */
-	private $data;
+	protected $data;
 
 	/**
 	 * Post ID.
@@ -88,6 +88,8 @@ class AMP_Post_Template {
 	public function __construct( $post ) {
 
 		$this->template_dir = apply_filters( 'amp_post_template_dir', AMP__DIR__ . '/templates' );
+
+
 
 		if ( $post instanceof WP_Post ) {
 			$this->post = $post;
@@ -218,7 +220,7 @@ class AMP_Post_Template {
 	 * @param string $template Template name.
 	 * @return string Template path.
 	 */
-	private function get_template_path( $template ) {
+	protected function get_template_path( $template ) {
 		return sprintf( '%s/%s.php', $this->template_dir, $template );
 	}
 
@@ -227,7 +229,7 @@ class AMP_Post_Template {
 	 *
 	 * @param array $data Data.
 	 */
-	private function add_data( $data ) {
+	protected function add_data( $data ) {
 		$this->data = array_merge( $this->data, $data );
 	}
 
@@ -237,7 +239,7 @@ class AMP_Post_Template {
 	 * @param string $key   Key.
 	 * @param mixed  $value Value.
 	 */
-	private function add_data_by_key( $key, $value ) {
+	protected function add_data_by_key( $key, $value ) {
 		$this->data[ $key ] = $value;
 	}
 
@@ -247,7 +249,7 @@ class AMP_Post_Template {
 	 * @param string $key   Key.
 	 * @param mixed  $value Value.
 	 */
-	private function merge_data_for_key( $key, $value ) {
+	protected function merge_data_for_key( $key, $value ) {
 		if ( is_array( $this->data[ $key ] ) ) {
 			$this->data[ $key ] = array_merge( $this->data[ $key ], $value );
 		} else {
@@ -260,7 +262,7 @@ class AMP_Post_Template {
 	 *
 	 * @since 0.2
 	 */
-	private function build_post_data() {
+	protected function build_post_data() {
 		$post_title              = get_the_title( $this->ID );
 		$post_publish_timestamp  = get_the_date( 'U', $this->ID );
 		$post_modified_timestamp = get_post_modified_time( 'U', false, $this->post );
@@ -284,7 +286,7 @@ class AMP_Post_Template {
 	/**
 	 * Buuild post comments data.
 	 */
-	private function build_post_commments_data() {
+	protected function build_post_commments_data() {
 		if ( ! post_type_supports( $this->post->post_type, 'comments' ) ) {
 			return;
 		}
@@ -313,7 +315,7 @@ class AMP_Post_Template {
 	/**
 	 * Build post content.
 	 */
-	private function build_post_content() {
+	protected function build_post_content() {
 		$amp_content = new AMP_Content(
 			$this->post->post_content,
 			amp_get_content_embed_handlers( $this->post ),
@@ -331,7 +333,7 @@ class AMP_Post_Template {
 	/**
 	 * Build post featured image.
 	 */
-	private function build_post_featured_image() {
+	protected function build_post_featured_image() {
 		$post_id       = $this->ID;
 		$featured_html = get_the_post_thumbnail( $post_id, 'large' );
 
@@ -380,7 +382,7 @@ class AMP_Post_Template {
 	/**
 	 * Build customizer settings.
 	 */
-	private function build_customizer_settings() {
+	protected function build_customizer_settings() {
 		$settings = AMP_Customizer_Settings::get_settings();
 
 		/**
@@ -403,7 +405,7 @@ class AMP_Post_Template {
 	/**
 	 * Build HTML tag attributes.
 	 */
-	private function build_html_tag_attributes() {
+	protected function build_html_tag_attributes() {
 		$attributes = array();
 
 		if ( function_exists( 'is_rtl' ) && is_rtl() ) {
@@ -424,7 +426,7 @@ class AMP_Post_Template {
 	 * @param string $file          File.
 	 * @param string $template_type Template type.
 	 */
-	private function verify_and_include( $file, $template_type ) {
+	protected function verify_and_include( $file, $template_type ) {
 		$located_file = $this->locate_template( $file );
 		if ( $located_file ) {
 			$file = $located_file;
@@ -447,7 +449,7 @@ class AMP_Post_Template {
 	 * @param string $file File.
 	 * @return string The template filename if one is located.
 	 */
-	private function locate_template( $file ) {
+	protected function locate_template( $file ) {
 		$search_file = sprintf( 'amp/%s', basename( $file ) );
 		return locate_template( array( $search_file ), false );
 	}
@@ -458,7 +460,7 @@ class AMP_Post_Template {
 	 * @param string $template Template name.
 	 * @return bool Whether valid.
 	 */
-	private function is_valid_template( $template ) {
+	protected function is_valid_template( $template ) {
 		if ( false !== strpos( $template, '..' ) ) {
 			return false;
 		}

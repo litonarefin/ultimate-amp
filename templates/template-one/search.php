@@ -7,16 +7,16 @@
 
 do_action('uamp/template/start');
 
-do_action('uamp/template/header');
+$this->load_parts(array('header'));
 
 do_action('uamp/template/sidebar');
 
 do_action('uamp_post_before_loop');
 
-do_action('uamp/template/search/query');
+$this->load_parts(array('template-parts/search'));
 
 do_action('uamp_post_after_loop');
 
-do_action('uamp/template/footer');
+$this->load_parts(array('footer'));
 
 do_action('uamp/template/end');

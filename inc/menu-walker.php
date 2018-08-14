@@ -111,7 +111,7 @@
 					$item_output .= $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after;
 				}
 
-				$item_output .= ! empty($item->description) ? '<span class="sub">' . $item->description . '</span>' : '';
+//				$item_output .= ! empty($item->description) ? '<span class="sub">' . $item->description . '</span>' : '';
 				$item_output .= ( $args->has_children && 0 === $depth ) ? '' : '</a>';
 				$item_output .= $args->after;
 

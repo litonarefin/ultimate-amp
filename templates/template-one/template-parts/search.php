@@ -75,7 +75,10 @@
 
 
         <div class="mb4 px3">
-			<?php do_action('uamp/template/featured-image');?>
+			<?php
+                do_action('uamp/template/featured-image');
+//				$this->load_parts(array('parts/featured-image'));
+			?>
 
 			<?php
 //				if(has_excerpt()){
