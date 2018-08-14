@@ -937,8 +937,6 @@ class Ultimate_AMP {
 	    $archives = $uamp_options['archives'];
 	    $allowed_pages = is_array( $archives ) ? $archives : array ();
 
-//        $allowed_pages = is_array( $this->options->get( 'archives' ) ) ? $this->options->get( 'archives' ) : array ();
-
         return 'posts' == get_option( 'show_on_front' ) && ! array_search( 'show_on_front', $allowed_pages );
     }
 
@@ -949,6 +947,17 @@ class Ultimate_AMP {
         return apply_filters( 'uamp_is_excluded_post', $is_excluded, $id );
     }
 
+
+
+	function uamp_get_blog_link(){
+		$blog_post = get_option("page_for_posts");
+		if($blog_post){
+			$permalink = get_permalink($blog_post);
+		}
+		else
+			$permalink = site_url();
+		return $permalink;
+	}
 
 	public static function is_home_posts_page() {
 		return ( is_home() && 'posts' == get_option( 'show_on_front' ) );

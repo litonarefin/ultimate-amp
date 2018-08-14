@@ -238,14 +238,14 @@
 					'text'    		=> esc_html__( 'Text', 'uamp'),
 					'text_image'    => esc_html__( 'Image & Text', 'uamp'),
 				),
-				'default'  => 'image'
+				'default'  => 'text_image'
 			),
 
 			array(
 				'id' => 'uamp_logo_text',
 				'type' => 'text',
 				'title' => esc_html__('Logo Text', 'uamp'),
-				'default' => esc_html__('Website Name', 'uamp'),
+				'default' => esc_html__('Ultimate AMP', 'uamp'),
 				'required' => array( 'uamp_logo_type', '=', array( 'text','text_image'))
 			),
 

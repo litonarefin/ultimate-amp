@@ -21,7 +21,6 @@
 
 //			$this->ID = $post_id;
 
-
 //			print_r($this->data['placeholder_image_url']);
 
 //			print_r($this);
@@ -29,6 +28,7 @@
 //			print_r($this->get_template_path('home'));
 
 //			$this->include_file();
+
 			$this->template_loader();
 			add_theme_support( 'amp', array( 'template_dir' => 'templates/template-one' ) );
 
@@ -39,50 +39,6 @@
 			global $uamp_options;
 
 			$is_loaded = $uamp_options['uamp_is_amp'];
-//
-//			require_once UAMP_DIR . '/inc/class-uamp-extend-lib-template-loader.php';
-//
-//			$template = new Ultimate_AMP_Load_Template_Files();
-//
-//			require_once UAMP_DIR . '/inc/class-uamp-autoload.php';
-//			UltimateAmpAutoload::register();
-//
-//			print_r($template);
-//
-//			switch ( $is_loaded == "enable" ) {
-//				case is_front_page() && is_home():
-//					$template->get_template_part('front-page');
-//					break;
-//				case is_front_page():
-//					$template->get_template_part('front-page');
-//					break;
-//				case is_home():
-//					$template->get_template_part('home');
-//					break;
-//				case is_single():
-//					$template->get_template_part('single');
-//					break;
-//				case is_page():
-//					$template->get_template_part('page');
-//					break;
-//				case is_category():
-//					$template->get_template_part('archive');
-//					break;
-////			case is_archive():
-////				$template->get_template_part('archive');
-////				break;
-//				case is_404():
-//					$template->get_template_part('404');
-//					break;
-//				case is_search():
-//					$template->get_template_part('search');
-//					break;
-//			}
-//
-
-
-
-
 
 			switch ( $is_loaded == "enable" ) {
 

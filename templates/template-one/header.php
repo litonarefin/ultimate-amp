@@ -33,7 +33,7 @@
             </a>
 
         <?php } elseif( $uamp_options['uamp_logo_type'] == "image" ){?>
-            <a class="logo" href="<?php echo esc_url( $uamp->get( 'home_url' ) ); ?>">
+            <a class="logo" href="<?php echo esc_url( $this->get( 'home_url' ) ); ?>">
 				<?php if ( $uamp_options['uamp_logo_image']['url'] ) { ?>
                     <amp-img src="<?php echo esc_url( $uamp_options['uamp_logo_image']['url'] ); ?>"
                              width="<?php echo $uamp_logo_width;?>"

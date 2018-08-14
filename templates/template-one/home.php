@@ -1,7 +1,4 @@
-Set Home Page Template
 <?php
-
-
 	do_action('uamp/template/start');
 
     $this->load_parts(array('header'));
@@ -10,9 +7,12 @@ Set Home Page Template
 
     do_action('uamp_post_before_loop');
 
-	if( is_home() && 'posts' == get_option( 'show_on_front' )){
+	if(
+	        is_home() && 'posts' == get_option( 'show_on_front' ) ||
+	        get_option("page_for_posts")
 
-		//print_r('This is Home Posts Page');
+    ){
+
 		$this->load_parts(array('inc/loop'));
 
 	} elseif(is_home() && 'page' == get_option( 'show_on_front' )){
