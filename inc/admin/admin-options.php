@@ -310,7 +310,7 @@
 		'title'            => __( 'Templates', 'uamp' ),
 		'id'               => 'templates',
 		'customizer_width' => '400px',
-		'icon'             => 'el el-globe',
+		'icon'             => 'el el-website',
 
 	) );
 

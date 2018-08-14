@@ -3,7 +3,7 @@ Contributors: litonice13, ultimateamp, jwthemeltd
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=jwthemeltd@gmail.com&lc=US&item_name=Donate&currency_code=USD&bn=PP-DonationsBF:btn_donate_SM.gif:NonHostedGuest
 Tags: Ultimate AMP, AMP, Accelerated Mobile Pages, Google AMP, AMP Plugin, AMP WP Plugin, AMP WordPress Plugin
 Requires at least: 4.0
-Tested up to: 4.9.7
+Tested up to: 4.9.8
 Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -72,4 +72,22 @@ We've two ways to give Supports for Ultimate AMP WP Plugin - Plugin Support Foru
 * For no conflict with other Plugins - If existing Plugin activated then with Activating WP Ultimate AMP exiting Plugin will Deactivated. 
 * While Active on Ultimate AMP Plugin - for no conflict issue other Plugins can't be Installed. It's safe for not site breaking.
 
+= 1.0.21
+* Date: [15.July.2018](https://jeweltheme.com/shop/ultimate-amp/)
+* Category Page Template issue resolved
+* Ultimate AMP Search(Posts,Pages) on Website Issue resolved
+* Static Homepage not found issue resolved
+* Set Homepage Blog Posts Issue resolved
+* Set Blog Page issue Resolved
+* Tested: fresh Installation, Permalink issue fixed.
+* Canonical URL, Site Title, Comment URL Issue resolved
+* Template Structure re-factored, organized on a good way
+* Ultimate AMP Options: Activation Logo not display issue resolved
+* Ultimate AMP Options: Added Templates Section - Posts and Pages in Sub-section
+* Given Support of Ajax Comment on AMP Version
+* Redirect to Desktop Version with Link on Posts, Blog, Homepage, Pages, Archive issue resolved
+* Activation/Deactivation bug fixed
+
 == Upgrade Notice ==
+= 1.2.0
+* Fixed Major issues related with Template and Activation/Deactivation issues.
