@@ -61,9 +61,60 @@
 			</ul>
 
 			<div class="center">
-				<a href="<?php Ultimate_AMP_Helper::uamp_comment_link();?>" class="button center add-comment mt3">
+
+                <a href="<?php Ultimate_AMP_Helper::uamp_comment_link();?>" class="button center add-comment mt3">
 					<?php echo _e('Add Comment', 'uamp'); ?>
-				</a>
+                </a>
+
+
+                <div class="button center add-comment mt3">
+					<?php echo _e('Add a Comment', 'uamp'); ?>
+                </div>
+
+
+
+                <form
+                        method="post"
+                        id="commentform"
+                        class="comment-form"
+                        novalidate=""
+                        action-xhr="<?php echo admin_url('admin-ajax.php?action=uamp_comment_submit') ?>"
+                        target="_top">
+                    <p class="comment-notes">
+                        <span id="email-notes">Your email address will not be published.</span> Required fields are marked <span class="required">*</span>
+                    </p>
+                    <p class="comment-form-comment">
+                        <label for="comment">Comment</label>
+                        <textarea id="comment" name="comment" cols="45" rows="8" maxlength="65525" aria-required="true" required="required"></textarea>
+                    </p>
+                    <p class="comment-form-author">
+                        <label for="author">Name <span class="required">*</span></label>
+                        <input id="author" name="author" type="text" value="" maxlength="245" aria-required="true" required="required" />
+                    </p>
+                    <p class="comment-form-email">
+                        <label for="email">Email <span class="required">*</span></label>
+                        <input id="email" name="email" type="email" value="" maxlength="100" aria-describedby="email-notes" aria-required="true" required="required" />
+                    </p>
+                    <p class="comment-form-url">
+                        <label for="url">Website</label>
+                        <input id="url" name="url" type="url" value="" maxlength="200" />
+                    </p>
+                    <p class="form-submit">
+                        <input name="submit" type="submit" id="submit" class="submit" value="Post Comment" />
+                        <input type="hidden" name="comment_post_ID" value="1" id="comment_post_ID" /><br/>
+                        <input type="hidden" name="comment_parent" id="comment_parent" value="0" />
+                    </p>
+                    <div submit-error>
+                        <template type="amp-mustache">
+                            {{msg}}
+                        </template>
+                    </div>
+                </form>
+
+
+
+
+                
 			</div>
 
 		</section>

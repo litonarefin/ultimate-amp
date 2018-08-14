@@ -29,8 +29,11 @@
 
 //			$this->include_file();
 
+
 			$this->template_loader();
+
 			add_theme_support( 'amp', array( 'template_dir' => 'templates/template-one' ) );
+
 
 		}
 

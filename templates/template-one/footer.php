@@ -31,7 +31,7 @@
             ?>
         </nav>
 
-        <div class="uamp-button">
+        <div class="uamp-redirect">
 
             <a href="<?php echo $url;?>">
 	            <?php uamp_redirect_to_desktop_version();?>

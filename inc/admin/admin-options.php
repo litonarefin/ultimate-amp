@@ -315,10 +315,30 @@
 	) );
 
 
-	// Header
+	// Posts
 	Redux::setSection( $opt_name, array(
-		'title'            => __( 'General', 'uamp' ),
-		'id'               => 'templates-general',
+		'title'            => __( 'Posts', 'uamp' ),
+		'id'               => 'templates-posts',
+		'subsection'       => true,
+		'fields'           => array(
+
+			array(
+				'id' => 'uamp_desktop_text',
+				'type' => 'text',
+				'title' => esc_html__('View Desktop', 'uamp'),
+				'subtitle' => __('Redirect to Original URL message "View Desktop"', 'uamp'),
+				'default' => esc_html__('View Desktop Version', 'uamp'),
+			),
+
+
+		)
+	) );
+
+
+	// Page
+	Redux::setSection( $opt_name, array(
+		'title'            => __( 'Posts', 'uamp' ),
+		'id'               => 'templates-posts',
 		'subsection'       => true,
 		'fields'           => array(
 
