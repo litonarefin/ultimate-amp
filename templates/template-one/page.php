@@ -1,15 +1,16 @@
-<?php do_action('uamp/template/start'); ?>
+<?php
+	do_action('uamp/template/start');
 
-<?php $this->load_parts(array('header')); ?>
+	$this->load_parts(array('header'));
 
-<?php do_action('uamp/template/sidebar'); ?>
+	do_action('uamp/template/sidebar');
 
-<?php do_action('uamp_post_before_loop'); ?>
+	do_action('uamp_post_before_loop');
 
-<?php $this->load_parts(array('template-parts/page')); ?>
+	$this->load_parts(array('template-parts/page'));
 
-<?php do_action('uamp_post_after_loop'); ?>
+	do_action('uamp_post_after_loop');
 
-<?php $this->load_parts(array('footer')); ?>
+	$this->load_parts(array('footer'));
 
-<?php do_action('uamp/template/end'); ?>
+	do_action('uamp/template/end');

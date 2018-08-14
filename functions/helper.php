@@ -5,6 +5,8 @@
 	 * Date: 7/14/18
 	 */
 
+
+
 	// New Template Directory
 	add_filter('amp_post_template_dir','uamp_new_template_dir');
 
@@ -165,3 +167,4 @@
 		}
 		return $actions;
 	}
+

@@ -14,9 +14,11 @@
 			parent::__construct( $post );
 			$this->template_dir = apply_filters( 'amp_post_template_dir', UAMP_DIR . '/templates/template-one' );
 
-			if ( Ultimate_AMP::is_home_static_page() ) {
-				$post_id = ampforwp_get_frontpage_id();
-			}
+//			if ( Ultimate_AMP::is_home_static_page() ) {
+//				$post_id = ampforwp_get_frontpage_id();
+//			}
+
+
 //			$this->ID = $post_id;
 
 
@@ -118,11 +120,52 @@
 
 			}
 
+		}
 
 
-//			return $template;
+
+
+
+		function uamp_template_loader() {
+
+			if (!$this->uamp_is_amp_endpoint()) {
+				return;
+			}
+
+
+			$templates = new Ultimate_Template_Loader();
+
+			if (function_exists('is_embed') && is_embed() && $template = better_amp_embed_template()) :
+			elseif (function_exists('is_woocommerce') && is_woocommerce() && is_page(wc_get_page_id('shop')) && $template = $this->uamp_woocommerce_template()) :
+			elseif (is_404() && $template = $this->uamp_404_template()) :
+				//        elseif ( is_search() && $template = better_amp_search_template() ) :
+			elseif (is_home() && $template = $this->uamp_home_template()) :
+				//        elseif ( is_post_type_archink rel="canonical" href=ve() && $template = better_amp_post_type_archive_template() ) :
+				//        elseif ( is_tax() && $template = better_amp_taxonomy_template() ) :
+				//        elseif ( is_attachment() && $template = better_amp_attachment_template() ) :
+				//			remove_filter( 'the_content', 'prepend_attachment' );
+			elseif (is_single() && $template = $this->uamp_single_template()) :
+			elseif (is_page() && $template = $this->uamp_page_template()) :
+			elseif (is_singular() && $template = $this->uamp_single_template()) :
+				//        elseif ( is_category() && $template = better_amp_category_template() ) :
+				//        elseif ( is_tag() && $template = better_amp_tag_template() ) :
+				//        elseif ( is_author() && $template = better_amp_author_template() ) :
+				//        elseif ( is_date() && $template = better_amp_date_template() ) :
+				//        elseif ( is_archive() && $template = better_amp_archive_template() ) :
+				//        elseif ( is_paged() && $template = better_amp_paged_template() ) :
+			else :
+				$template = $this->better_amp_index_template();
+			endif;
+
+			return $template;
 
 		}
+
+
+
+
+
+
 
 
 		public static function uamp_is_blog(){
