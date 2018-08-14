@@ -52,7 +52,17 @@
 
 		// Get Comment Link
 		public static function uamp_comment_link(){
-			$comments_url = get_permalink() . '#respond';
+			global $uamp_options;
+			$uamp_is_amp = $uamp_options['uamp_is_amp'];
+			$url = AMP_Theme_Support::get_current_canonical_url();
+
+			if ( $uamp_is_amp == "enable" ) {
+				$url = add_query_arg( array (
+					'desktop-redirect' => '1',
+				), $url );
+			}
+
+			$comments_url = $url . '#respond';
 			echo esc_url( $comments_url );
 		}
 

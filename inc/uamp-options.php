@@ -75,11 +75,38 @@
     }
 
 
-    // Redirect to Desktop/Original URL
-    function uamp_redirect_to_desktop_version(){
+
+    /*
+     * Template Section
+     */
+
+
+	// Redirect to Desktop/Original URL
+	function uamp_redirect_to_desktop_version(){
+		global $uamp_options;
+		$uamp_desktop_text = $uamp_options['uamp_desktop_text'];
+
+		echo $uamp_desktop_text;
+	}
+
+
+    function uamp_posts_comment_button(){
+	    global $uamp_options;
+	    echo $uamp_options['uamp_posts_comment_btn_text'];
+    }
+
+    function uamp_pages_comment_button(){
+	    global $uamp_options;
+	    echo $uamp_options['uamp_pages_comment_btn_text'];
+    }
+
+    function uamp_posts_ajax_comment(){
+	    global $uamp_options;
+	    return $uamp_options['uamp_posts_ajax_comment'];
+
+    }
+    function uamp_pages_ajax_comment(){
 	    global $uamp_options;
 	    $uamp_desktop_text = $uamp_options['uamp_desktop_text'];
 
-	    echo $uamp_desktop_text;
     }
-

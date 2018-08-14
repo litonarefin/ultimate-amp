@@ -322,6 +322,27 @@
 		'subsection'       => true,
 		'fields'           => array(
 
+
+			array(
+				'id' => 'uamp_posts_comment_btn_text',
+				'type' => 'text',
+				'title' => esc_html__('Comment Button', 'uamp'),
+				'default' => esc_html__('Add a Comment', 'uamp'),
+			),
+
+			array(
+				'id'       => 'uamp_posts_ajax_comment',
+				'type'     => 'button_set',
+				'title'    => __( 'Ajax Comment?', 'uamp' ),
+				'subtitle' => __( 'Do you want to enable Ajax Comment ON?', 'uamp' ),
+				'desc'     => __( 'Enable/Disable Ajax Commenting on AMP Version', 'uamp' ),
+				'options'  => array(
+					'enable' => 'Enable',
+					'disable' => 'Disable'
+				),
+				'default'  => 'enable'
+			),
+
 			array(
 				'id' => 'uamp_desktop_text',
 				'type' => 'text',
@@ -329,26 +350,49 @@
 				'subtitle' => __('Redirect to Original URL message "View Desktop"', 'uamp'),
 				'default' => esc_html__('View Desktop Version', 'uamp'),
 			),
+
+			array(
+				'id' => 'uamp_desktop_text',
+				'type' => 'text',
+				'title' => esc_html__('View Desktop', 'uamp'),
+				'subtitle' => __('Redirect to Original URL message "View Desktop"', 'uamp'),
+				'default' => esc_html__('View Desktop Version', 'uamp'),
+			),
+
 
 
 		)
 	) );
 
 
-	// Page
+	// Pages
 	Redux::setSection( $opt_name, array(
-		'title'            => __( 'Posts', 'uamp' ),
-		'id'               => 'templates-posts',
+		'title'            => __( 'Pages', 'uamp' ),
+		'id'               => 'templates-pages',
 		'subsection'       => true,
 		'fields'           => array(
 
 			array(
-				'id' => 'uamp_desktop_text',
+				'id' => 'uamp_pages_comment_btn_text',
 				'type' => 'text',
-				'title' => esc_html__('View Desktop', 'uamp'),
-				'subtitle' => __('Redirect to Original URL message "View Desktop"', 'uamp'),
-				'default' => esc_html__('View Desktop Version', 'uamp'),
+				'title' => esc_html__('Comment Button', 'uamp'),
+				'default' => esc_html__('Add a Comment', 'uamp'),
 			),
+
+			array(
+				'id'       => 'uamp_pages_ajax_comment',
+				'type'     => 'button_set',
+				'title'    => __( 'Ajax Comment?', 'uamp' ),
+				'subtitle' => __( 'Do you want to enable Ajax Comment ON?', 'uamp' ),
+				'desc'     => __( 'Enable/Disable Ajax Commenting on AMP Version', 'uamp' ),
+				'options'  => array(
+					'enable' => 'Enable',
+					'disable' => 'Disable'
+				),
+				'default'  => 'enable'
+			),
+
+
 
 
 		)

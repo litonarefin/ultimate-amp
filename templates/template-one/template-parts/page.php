@@ -4,9 +4,7 @@
 	 * Author URL: https://jeweltheme.com
 	 * Date: 7/9/18
 	 */
-	global $post_id;
-	
-	$uamp = new AMP_Post_Template($post_id);
+	global $uamp_options;
 	?>
 
 <main id="content" role="main" <?php post_class();?>>
@@ -16,7 +14,7 @@
                 <?php do_action('uamp/template/post/meta');?>
             </span>
 			<h1 class="mb1 px3">
-				<?php echo wp_kses_data( $uamp->get( 'post_title' ) ); ?>
+				<?php echo wp_kses_data( $this->get( 'post_title' ) ); ?>
 			</h1>
 			<!-- Start byline -->
 			<address class="ampstart-byline clearfix mb4 px3">
@@ -24,12 +22,13 @@
 				<?php do_action('uamp/template/post/meta/author');?>
 
 				<div class="amp-wp-meta amp-wp-posted-on">
-					<time datetime="<?php echo esc_attr( date( 'c', $uamp->get( 'post_publish_timestamp' ) ) ); ?>">
+					<time datetime="<?php echo esc_attr( date( 'c', $this->get( 'post_publish_timestamp' ) ) ); ?>">
 						<?php
 							echo esc_html(
 								sprintf(
 									_x( '%s ago', '%s = human-readable time difference', 'amp' ),
-									human_time_diff( $uamp->get( 'post_publish_timestamp' ), current_time( 'timestamp' ) )
+									human_time_diff( $this->get( 'post_publish_timestamp' ), current_time( 'timestamp'
+                                    ) )
 								)
 							);
 						?>
@@ -43,7 +42,7 @@
 		</header>
 
 		<div class="mb4 px3">
-			<?php echo $uamp->get( 'post_amp_content' ); // amphtml content; no kses
+			<?php echo $this->get( 'post_amp_content' ); // amphtml content; no kses
 				wp_link_pages( array(
 					'before'      => '<div class="page-links"><span class="page-links-title">' . __( 'Pages:', 'uamp' ) . '</span>',
 					'after'       => '</div>',
@@ -65,12 +64,19 @@
 
 			<div class="center">
 
-				<a href="<?php Ultimate_AMP_Helper::uamp_comment_link();?>" class="button center add-comment mt3">
-					<?php echo _e('Add Comment', 'uamp'); ?>
-				</a>
+                <?php if($uamp_options['uamp_pages_ajax_comment']=="disable"){?>
+
+                    <a href="<?php Ultimate_AMP_Helper::uamp_comment_link();?>" class="button center add-comment mt3">
+		                <?php uamp_pages_comment_button(); ?>
+                    </a>
+
+                <?php } else{ ?>
+
+
+
 
                 <div class="button center add-comment mt3">
-					<?php echo _e('Add Comment', 'uamp'); ?>
+	                <?php uamp_pages_comment_button(); ?>
                 </div>
 
                 <form
@@ -111,6 +117,8 @@
                     </div>
                 </form>
 
+
+                <?php } ?>
 
 
 			</div>

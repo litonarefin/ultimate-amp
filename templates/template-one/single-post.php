@@ -4,6 +4,9 @@
 	 * Author URL: https://jeweltheme.com
 	 * Date: 7/9/18
 	 */
+
+	global $post_id,$uamp_options;
+
 	?>
 
 <main id="content" role="main" <?php post_class();?>>
@@ -62,13 +65,18 @@
 
 			<div class="center">
 
-                <a href="<?php Ultimate_AMP_Helper::uamp_comment_link();?>" class="button center add-comment mt3">
-					<?php echo _e('Add Comment', 'uamp'); ?>
-                </a>
+				<?php if($uamp_options['uamp_posts_ajax_comment']=="disable"){?>
+
+                    <a href="<?php Ultimate_AMP_Helper::uamp_comment_link();?>" class="button center add-comment mt3">
+                        <?php uamp_posts_comment_button(); ?>
+                    </a>
+
+				<?php } else{ ?>
+
 
 
                 <div class="button center add-comment mt3">
-					<?php echo _e('Add a Comment', 'uamp'); ?>
+	                <?php uamp_posts_comment_button(); ?>
                 </div>
 
 
@@ -99,7 +107,7 @@
                         <label for="url">Website</label>
                         <input id="url" name="url" type="url" value="" maxlength="200" />
                     </p>
-                    <p class="form-submit">
+                    <p class="button center add-comment mt3">
                         <input name="submit" type="submit" id="submit" class="submit" value="Post Comment" />
                         <input type="hidden" name="comment_post_ID" value="1" id="comment_post_ID" /><br/>
                         <input type="hidden" name="comment_parent" id="comment_parent" value="0" />
@@ -110,6 +118,9 @@
                         </template>
                     </div>
                 </form>
+
+
+				<?php } ?>
 
 
 
