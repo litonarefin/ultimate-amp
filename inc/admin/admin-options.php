@@ -286,8 +286,6 @@
 
 
 	// Footer
-
-
 	Redux::setSection( $opt_name, array(
 		'title'            => __( 'Footer', 'uamp' ),
 		'id'               => 'global-footer',
@@ -303,6 +301,40 @@
 
 		)
 	) );
+
+
+
+
+	// Templates
+	Redux::setSection( $opt_name, array(
+		'title'            => __( 'Templates', 'uamp' ),
+		'id'               => 'templates',
+		'customizer_width' => '400px',
+		'icon'             => 'el el-globe',
+
+	) );
+
+
+	// Header
+	Redux::setSection( $opt_name, array(
+		'title'            => __( 'General', 'uamp' ),
+		'id'               => 'templates-general',
+		'subsection'       => true,
+		'fields'           => array(
+
+			array(
+				'id' => 'uamp_desktop_text',
+				'type' => 'text',
+				'title' => esc_html__('View Desktop', 'uamp'),
+				'subtitle' => __('Redirect to Original URL message "View Desktop"', 'uamp'),
+				'default' => esc_html__('View Desktop Version', 'uamp'),
+			),
+
+
+		)
+	) );
+
+
 
 
 

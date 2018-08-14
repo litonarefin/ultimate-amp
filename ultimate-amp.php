@@ -159,23 +159,25 @@ class Ultimate_AMP {
         add_action( 'template_redirect', array ( $this, 'uamp_load_template' ) );
 
         add_rewrite_endpoint( $this->uamp_get_endpoint(), EP_ALL );
-        add_action( 'pre_get_posts', array ( $this, 'search_filter' ) );
-        add_filter( 'uamp_is_mobile_get_redirect_url', array ( $this, 'view_original_redirect' ) );
 
-        /**
+        //exclude disabled pages ( like product cart ) from search
+        add_action( 'pre_get_posts', array ( $this, 'search_filter' ) );
+
+	    //pagination, custom post types and taxonomies support
+//        add_filter( 'do_parse_request', array ( $this, 'parse_request' ), 10, 3 );
+
+
+
+	    //view original button redirect
+	    add_filter( 'uamp_is_mobile_get_redirect_url', [ $this, 'uamp_view_original_redirect' ] );
+
+
+	    /**
          * Activation Hook
          * Triggers while Ultimate AMP Plugin is Active
          */
         register_activation_hook(__FILE__, [$this, 'uamp_activate']);
 
-	    /*
-	     * Activation Hook - Deactivate Other Plugins those will
-	     * conflict with Ultimate AMP Plugin
-	     */
-	    register_activation_hook( __FILE__, [$this, 'uamp_deactivate_ampbywp']);
-	    register_activation_hook( __FILE__, [$this, 'uamp_deactivate_ampforwp']);
-	    register_activation_hook( __FILE__, [$this, 'uamp_deactivate_better_amp']);
-	    register_activation_hook( __FILE__, [$this, 'uamp_deactivate_wp_amp']);
 
 	    /*
 	     * Deactivation Hook
@@ -196,10 +198,6 @@ class Ultimate_AMP {
         if ( is_admin() ) {
             $this->uamp_admin_init();
         }
-
-
-
-//        add_filter( 'do_parse_request', array ( $this, 'parse_request' ), 10, 3 );
 
 
 	    // Default AMP Plugin
@@ -631,66 +629,9 @@ class Ultimate_AMP {
     }
 
 
-
-
-// AMP by WP
-		function uamp_deactivate_ampbywp(){
-			$dependent = 'amp/amp.php';
-			if( is_plugin_active($dependent) ){
-				add_action('update_option_active_plugins', 'uamp_deactivate_ampbywp_independent');
-			}
-		}
-		function uamp_deactivate_ampbywp_independent(){
-			$dependent = 'amp/amp.php';
-			deactivate_plugins($dependent);
-		}
-
-
-// AMP for WP
-		function uamp_deactivate_ampforwp(){
-			$dependent = 'accelerated-mobile-pages/accelerated-moblie-pages.php';
-			if( is_plugin_active($dependent) ){
-				add_action('update_option_active_plugins', 'uamp_deactivate_ampforwp_independent');
-			}
-		}
-		function uamp_deactivate_ampforwp_independent(){
-			$dependent = 'accelerated-mobile-pages/accelerated-moblie-pages.php';
-			deactivate_plugins($dependent);
-		}
-
-
-// Better AMP
-		function uamp_deactivate_better_amp(){
-			$dependent = 'better-amp/better-amp.php';
-			if( is_plugin_active($dependent) ){
-				add_action('update_option_active_plugins', 'uamp_deactivate_better_amp_independent');
-			}
-		}
-		function uamp_deactivate_better_amp_independent(){
-			$dependent = 'better-amp/better-amp.php';
-			deactivate_plugins($dependent);
-		}
-
-
-// Better AMP
-		function uamp_deactivate_wp_amp(){
-			$dependent = 'wp-amp/wp-amp.php';
-			if( is_plugin_active($dependent) ){
-				add_action('update_option_active_plugins', 'uamp_deactivate_wp_amp_independent');
-			}
-		}
-		function uamp_deactivate_wp_amp_independent(){
-			$dependent = 'wp-amp/wp-amp.php';
-			deactivate_plugins($dependent);
-		}
-
-
-
-
-
-		/*
-		 * Register Ultimate AMP Menus
-		 */
+	/*
+	 * Register Ultimate AMP Menus
+	 */
     public function uamp_register_menus() {
         register_nav_menus(
             array(
@@ -1071,8 +1012,8 @@ class Ultimate_AMP {
 
 
 
-    public function view_original_redirect( $is_mobile ) {
-        return $is_mobile && false == isset( $_GET['view-original-redirect'] );
+    public function uamp_view_original_redirect( $is_mobile ) {
+        return $is_mobile && false == isset( $_GET['desktop-redirect'] );
     }
 
     public function get_search_redirect_url() {
@@ -1150,4 +1091,70 @@ function ultimate_amp() {
 
 // Let's kick it
 ultimate_amp();
+
+
+
+
+	/*
+	 * Activation Hook - Deactivate Other Plugins those will
+	 * conflict with Ultimate AMP Plugin
+	 */
+	register_activation_hook( __FILE__, 'uamp_deactivate_ampbywp');
+	register_activation_hook( __FILE__, 'uamp_deactivate_ampforwp');
+	register_activation_hook( __FILE__, 'uamp_deactivate_better_amp');
+	register_activation_hook( __FILE__, 'uamp_deactivate_wp_amp');
+
+
+
+	// AMP by WP
+	function uamp_deactivate_ampbywp(){
+		$dependent = 'amp/amp.php';
+		if( is_plugin_active($dependent) ){
+			add_action('update_option_active_plugins', 'uamp_deactivate_ampbywp_independent');
+		}
+	}
+	function uamp_deactivate_ampbywp_independent(){
+		$dependent = 'amp/amp.php';
+		deactivate_plugins($dependent);
+	}
+
+
+	// AMP for WP
+	function uamp_deactivate_ampforwp(){
+		$dependent = 'accelerated-mobile-pages/accelerated-moblie-pages.php';
+		if( is_plugin_active($dependent) ){
+			add_action('update_option_active_plugins', 'uamp_deactivate_ampforwp_independent');
+		}
+	}
+	function uamp_deactivate_ampforwp_independent(){
+		$dependent = 'accelerated-mobile-pages/accelerated-moblie-pages.php';
+		deactivate_plugins($dependent);
+	}
+
+
+	// Better AMP
+	function uamp_deactivate_better_amp(){
+		$dependent = 'better-amp/better-amp.php';
+		if( is_plugin_active($dependent) ){
+			add_action('update_option_active_plugins', 'uamp_deactivate_better_amp_independent');
+		}
+	}
+	function uamp_deactivate_better_amp_independent(){
+		$dependent = 'better-amp/better-amp.php';
+		deactivate_plugins($dependent);
+	}
+
+
+	// Better AMP
+	function uamp_deactivate_wp_amp(){
+		$dependent = 'wp-amp/wp-amp.php';
+		if( is_plugin_active($dependent) ){
+			add_action('update_option_active_plugins', 'uamp_deactivate_wp_amp_independent');
+		}
+	}
+	function uamp_deactivate_wp_amp_independent(){
+		$dependent = 'wp-amp/wp-amp.php';
+		deactivate_plugins($dependent);
+	}
+
 

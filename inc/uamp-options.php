@@ -61,6 +61,8 @@
 		<?php }
 	}
 
+
+
     function uamp_footer_copyright_text(){
 		global $uamp_options;
 		$copyright_text = $uamp_options['uamp_copyright_text'];
@@ -71,3 +73,13 @@
 			echo '&copy; ' . esc_attr( date('Y') ) . esc_html__( ' | Developed by ','uamp') . '<i class="fa fa-heart"></i> ' . esc_html__('by','uamp') . ' <a href="' . esc_url( 'https://jeweltheme.com' ) . '" rel="nofollow">' . esc_html__('Jewel Theme','uamp') . '</a>';
 		}
     }
+
+
+    // Redirect to Desktop/Original URL
+    function uamp_redirect_to_desktop_version(){
+	    global $uamp_options;
+	    $uamp_desktop_text = $uamp_options['uamp_desktop_text'];
+
+	    echo $uamp_desktop_text;
+    }
+

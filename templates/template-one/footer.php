@@ -1,3 +1,15 @@
+<?php
+	global $uamp_options;
+
+	$uamp_is_amp = $uamp_options['uamp_is_amp'];
+	$url = AMP_Theme_Support::get_current_canonical_url();
+
+    if ( $uamp_is_amp == "enable" ) {
+        $url = add_query_arg( array (
+            'desktop-redirect' => '1',
+        ), $url );
+    }
+?>
 
     <footer class="ampstart-footer flex flex-column items-center px3 ">
         <nav class="ampstart-footer-nav">
@@ -18,6 +30,14 @@
                 }
             ?>
         </nav>
+
+        <div class="uamp-button">
+
+            <a href="<?php echo $url;?>">
+	            <?php uamp_redirect_to_desktop_version();?>
+            </a>
+
+        </div>
         <p>
             <?php uamp_footer_copyright_text();?>
         </p>
